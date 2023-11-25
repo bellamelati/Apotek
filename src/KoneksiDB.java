@@ -1,15 +1,13 @@
+import javax.swing.*;
 import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
-
 public class KoneksiDB {
     private static Connection koneksi;
 
     public static Connection getKoneksi() {
         try {
-            String url = "jdbc:mysql://localhost/aplikasiapotek";
+            String url = "jdbc:mysql://localhost:3306/apkilasiapotek";
             String user = "root";
             String password = "";
 
