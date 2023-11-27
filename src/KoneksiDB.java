@@ -12,11 +12,12 @@ public class KoneksiDB {
             String password = "";
 
             if (koneksi == null) {
+                Class.forName("com.mysql.cj.jdbc.Driver");
                 DriverManager.registerDriver(new Driver());
                 koneksi = DriverManager.getConnection(url, user, password);
                 JOptionPane.showMessageDialog(null, "Koneksi Berhasil !!!", "Report Koneksi", JOptionPane.INFORMATION_MESSAGE);
             }
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Gagal terhubung ke database", "Error", JOptionPane.ERROR_MESSAGE);
         }

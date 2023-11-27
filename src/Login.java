@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Objects;
 
 public class Login {
@@ -24,6 +26,25 @@ public class Login {
         JTextField usernameField = new JTextField(15);
         JPasswordField passwordField = new JPasswordField(15);
         JButton loginButton = new JButton("Login");
+
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String enteredUsername = usernameField.getText();
+                char[] enteredPassword = passwordField.getPassword();
+
+                // Replace the following condition with your actual login logic
+                if (isValidLogin(enteredUsername, enteredPassword)) {
+                    // If login is successful, open the Home class
+                    frame.dispose(); // Close the login frame
+                    Home home = new Home();
+                    home.showGUI();
+                } else {
+                    // If login fails, you can show an error message or take other actions
+                    JOptionPane.showMessageDialog(frame, "Invalid username or password", "Login Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
         // Mengatur font, size, warna
         Font labelFont = new Font("Rockwell", Font.BOLD, 17);
@@ -67,6 +88,14 @@ public class Login {
 
         // Menampilkan frame
         frame.setVisible(true);
+    }
+
+    private boolean isValidLogin(String username, char[] password) {
+        // Add your authentication logic here
+        // For example, you might check against a predefined username and password
+        String correctUsername = "admin";
+        String correctPassword = "admin123";
+        return username.equals(correctUsername) && new String(password).equals(correctPassword);
     }
 
 }
