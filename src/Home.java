@@ -23,9 +23,9 @@ public class Home {
     }
 
     private void addTitle() {
-        ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/judul.png")));
-        JLabel label = new JLabel(image);
-        frame.getContentPane().add(label, BorderLayout.NORTH);
+//        ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/judul.png")));
+//        JLabel label = new JLabel(image);
+//        frame.getContentPane().add(label, BorderLayout.NORTH);
     }
 
     private void addFeatureButtons() {
@@ -67,21 +67,21 @@ public class Home {
     private class MenuAdminListener extends FeatureListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            openAdminManagement();
+//            openAdminManagement();
         }
     }
 
     private class AddObatListener extends FeatureListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            openAddObatForm();
+//            openAddObatForm();
         }
     }
 
     private class KasirListener extends FeatureListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            openKasirTransaction();
+//            openKasirTransaction();
         }
     }
 
@@ -92,23 +92,23 @@ public class Home {
         }
     }
 
-    private void openAdminManagement() {
-        // Logika untuk tindakan saat menu admin diklik
-        AdminManagement adminManagement = new AdminManagement();
-        adminManagement.showGUI();
-    }
-
-    private void openAddObatForm() {
-        // Logika untuk tindakan saat add obat diklik
-        AddObatForm addObatForm = new AddObatForm();
-        addObatForm.showGUI();
-    }
-
-    private void openKasirTransaction() {
-        // Logika untuk tindakan saat kasir diklik
-        KasirTransaction kasirTransaction = new KasirTransaction();
-        kasirTransaction.showGUI();
-    }
+//    private void openAdminManagement() {
+//        // Logika untuk tindakan saat menu admin diklik
+//        AdminManagement adminManagement = new AdminManagement();
+//        adminManagement.showGUI();
+//    }
+//
+//    private void openAddObatForm() {
+//        // Logika untuk tindakan saat add obat diklik
+//        AddObatForm addObatForm = new AddObatForm();
+//        addObatForm.showGUI();
+//    }
+//
+//    private void openKasirTransaction() {
+//        // Logika untuk tindakan saat kasir diklik
+//        KasirTransaction kasirTransaction = new KasirTransaction();
+//        kasirTransaction.showGUI();
+//    }
 
     private void logout() {
         // Logika untuk tindakan saat logout diklik
