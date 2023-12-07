@@ -67,7 +67,7 @@ public class Home {
     private class MenuAdminListener extends FeatureListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-//            openAdminManagement();
+            openAdminCRUDFrame();
         }
     }
 
@@ -92,11 +92,11 @@ public class Home {
         }
     }
 
-//    private void openAdminManagement() {
-//        // Logika untuk tindakan saat menu admin diklik
-//        AdminManagement adminManagement = new AdminManagement();
-//        adminManagement.showGUI();
-//    }
+    private void openAdminCRUDFrame() {
+        // Create an instance of AdminCRUDFrame and show it
+        AdminCRUDFrame adminCRUDFrame = new AdminCRUDFrame();
+        adminCRUDFrame.setVisible(true);
+    }
 //
 //    private void openAddObatForm() {
 //        // Logika untuk tindakan saat add obat diklik

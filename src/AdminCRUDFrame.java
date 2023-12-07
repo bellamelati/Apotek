@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Objects;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -19,7 +22,7 @@ public class AdminCRUDFrame extends JFrame {
 
         setLayout(new BorderLayout());
 
-        ImageIcon image = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/Menuaddadmin_r.png")));
+        ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/Menuaddadmin.png")));
         JLabel titleLabel = new JLabel(image);
         JPanel titlePanel = new JPanel(new GridLayout(1, 1, 10, 10));
 
@@ -55,65 +58,38 @@ public class AdminCRUDFrame extends JFrame {
         inputPanel.add(passwordField);
 
 
-        JPanel crudPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel crudPanel = new JPanel(new GridLayout(1, 4, 10, 10));
         crudPanel.setBackground(backgroundColor);
 
-        ImageIcon addImage = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/fiturtambah.png")));
+        ImageIcon addImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturtambah.png")));
         JButton addButton = new JButton(addImage);
-        addButton.setBorderPainted(false);
-        addButton.setContentAreaFilled(false);
-        addButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
+        customizeButton(addButton);
 
-        
-        ImageIcon updateButtonImage = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/fiturubah.png")));
+        ImageIcon updateButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturubah.png")));
         JButton updateButton = new JButton(updateButtonImage);
-        updateButton.setBorderPainted(false);
-        updateButton.setContentAreaFilled(false);
-        updateButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
+        customizeButton(updateButton);
 
-
-        ImageIcon deleteButtonImage = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/fiturhapus.png")));
+        ImageIcon deleteButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturhapus.png")));
         JButton deleteButton = new JButton(deleteButtonImage);
-        deleteButton.setBorderPainted(false);
-        deleteButton.setContentAreaFilled(false);
-        deleteButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
+        customizeButton(deleteButton);
 
-        ImageIcon clearButtonImage = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/bersih.png")));
+        ImageIcon clearButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/bersih.png")));
         JButton clearAllButton = new JButton(clearButtonImage);
-        clearAllButton.setBorderPainted(false);
-        clearAllButton.setContentAreaFilled(false);
-        clearAllButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));        
+        customizeButton(clearAllButton);
+
+        ImageIcon SearchButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/kcari.png")));
+        JButton SearchButton = new JButton(SearchButtonImage);
+        customizeButton(clearAllButton);
 
         crudPanel.add(addButton);
         crudPanel.add(updateButton);
         crudPanel.add(deleteButton);
         crudPanel.add(clearAllButton);
+        crudPanel.add(SearchButton);
 
         inputPanel.add(crudPanel);
         add(inputPanel, BorderLayout.CENTER);
 
-        // Create search panel
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        searchPanel.setBackground(backgroundColor);
-
-        JLabel searchLabel = new JLabel("ID_ADMIN");
-        searchLabel.setFont(labelFont);
-        searchLabel.setForeground(Color.WHITE);
-        searchField = new JTextField(15);
-
-
-        ImageIcon searchButtonImage = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/cariadmin.png")));
-        JButton searchButton = new JButton(searchButtonImage);
-        searchButton.setBorderPainted(false);
-        searchButton.setContentAreaFilled(false);
-        searchButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));        
-
-        searchPanel.add(searchLabel);
-        searchPanel.add(searchField);
-        searchPanel.add(searchButton);
-
-        inputPanel.add(searchPanel);
-        // add(searchPanel, BorderLayout.CENTER);
 
         // Create a table model with columns
         String[] columns = {"Kode Admin", "Username", "Password"};
@@ -127,7 +103,7 @@ public class AdminCRUDFrame extends JFrame {
         JScrollPane tableScrollPane = new JScrollPane(adminTable);
         add(tableScrollPane, BorderLayout.AFTER_LAST_LINE);
 
-        dummy();
+//        dummy();
 
         // Action listeners for buttons
         addButton.addActionListener(new ActionListener() {
@@ -151,7 +127,7 @@ public class AdminCRUDFrame extends JFrame {
             }
         });
 
-        searchButton.addActionListener(new ActionListener() {
+        SearchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 searchAdmin();
@@ -172,30 +148,74 @@ public class AdminCRUDFrame extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); 
     }
 
-    private void dummy(){
-        Object[] dummy1 = {"ADM001", "Admin", "admin"};
-        Object[] dummy2 = {"ADM002", "Romi", "dummyPass2"};
-        Object[] dummy3 = {"ADM003", "Mina", "dummyPass2"};
-
-
-        tableModel.addRow(dummy1);
-        tableModel.addRow(dummy2);
-        tableModel.addRow(dummy3);
+    private void customizeButton(JButton button) {
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.setOpaque(false);
+        button.setPreferredSize(new Dimension(button.getIcon().getIconWidth(), button.getIcon().getIconHeight()));
     }
 
+//    private void dummy(){
+//        Object[] dummy1 = {"ADM001", "Admin", "admin"};
+//        Object[] dummy2 = {"ADM002", "Romi", "dummyPass2"};
+//        Object[] dummy3 = {"ADM003", "Mina", "dummyPass2"};
+//
+//
+//        tableModel.addRow(dummy1);
+//        tableModel.addRow(dummy2);
+//        tableModel.addRow(dummy3);
+//    }
+
+//    private void addAdmin() {
+//        String code = codeField.getText();
+//        String username = usernameField.getText();
+//        String password = passwordField.getText();
+//
+//        if (!code.isEmpty() && !username.isEmpty() && !password.isEmpty()) {
+//            Object[] rowData = {code, username, password};
+//            tableModel.addRow(rowData);
+//            clearFields();
+//        } else {
+//            JOptionPane.showMessageDialog(this, "All fields must be filled.", "Error", JOptionPane.ERROR_MESSAGE);
+//        }
+//    }
+
     private void addAdmin() {
-        String code = codeField.getText();
+        String idAdmin = codeField.getText();
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        if (!code.isEmpty() && !username.isEmpty() && !password.isEmpty()) {
-            Object[] rowData = {code, username, password};
+        if (!idAdmin.isEmpty() && !username.isEmpty() && !password.isEmpty()) {
+            Object[] rowData = {idAdmin, username, password};
             tableModel.addRow(rowData);
             clearFields();
+
+            // Add the following code to insert data into the database
+            try {
+                // Establish a database connection
+                Connection connection = KoneksiDB.getKoneksi();
+
+                // Prepare a SQL query to insert admin data
+                String query = "INSERT INTO admin (id_Admin, username, password) VALUES (?, ?, ?)";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setString(1, idAdmin);
+                    preparedStatement.setString(2, username);
+                    preparedStatement.setString(3, password);
+
+                    // Execute the query
+                    preparedStatement.executeUpdate();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                // Handle the exception (e.g., show an error message)
+                JOptionPane.showMessageDialog(this, "Failed to add admin to the database.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } else {
             JOptionPane.showMessageDialog(this, "All fields must be filled.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     private void updateAdmin() {
         int selectedRow = adminTable.getSelectedRow();
@@ -257,11 +277,11 @@ public class AdminCRUDFrame extends JFrame {
         clearFields();
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new AdminCRUDFrame();
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                new AdminCRUDFrame();
+//            }
+//        });
+//    }
 }
