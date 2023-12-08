@@ -5,15 +5,15 @@ import java.awt.event.MouseEvent;
 import java.util.Objects;
 
 public class Home extends JFrame {
-    private JLabel adduser;
-    private JLabel addobat;
+    private JLabel adminCRUDFrame;
+    private JLabel obat;  
     private JLabel kasir;
-    private JLabel hoveruser;
-    private JLabel dbobat_hover;
-    private JLabel kasir_hover;
-    private JLabel home_jl_keluar;
+    private JLabel hoverAdmin;
+    private JLabel hoverObat;
+    private JLabel hoverKasir;
+    private JLabel logoutLabel;
     private JLabel menuLabel;
-    private LabelTime waktu;
+    private Waktu waktu;
 
     public Home(String nama) {
         initializeFrame();
@@ -31,50 +31,43 @@ public class Home extends JFrame {
         setLocation(120, 50);
         setSize(1100, 640);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Menu Admin Apotek Unjani");
+        setTitle("Menu Admin Apotek Unjani Kelompok 4");
         setLocationRelativeTo(null);
         setResizable(false);
 
         JOptionPane.showMessageDialog(null, "Login Berhasil", "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
     }
 
-<<<<<<< HEAD
     private void userInterface() {
-        waktu = new LabelTime();
+        waktu = new Waktu();
         waktu.setForeground(Color.WHITE);
         waktu.setSize(200, 100);
         waktu.setLocation(800, 551);
         waktu.setFont(new Font("Arial", Font.BOLD, 24));
-        waktu.setHorizontalAlignment(LabelTime.RIGHT);
+        waktu.setHorizontalAlignment(Waktu.RIGHT);
 
         getContentPane().add(waktu);
         waktu.setBounds(750, 520, 300, 40);
-=======
-    private void addTitle() {
-//        ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/judul.png")));
-//        JLabel label = new JLabel(image);
-//        frame.getContentPane().add(label, BorderLayout.NORTH);
->>>>>>> bfba401c6b0f2a27329955078a093f66fe1298c8
     }
 
     private void initializeComponents() {
         getContentPane().setLayout(null);
 
-        adduser = createLabel("/image/menuadmin.png", 180, 180);
-        hoveruser = createLabel("/image/hoveradmin.png", 0, 361);
-        addobat = createLabel("/image/addobat.png", 465, 180);
-        dbobat_hover = createLabel("/image/hoverobat.png", 0, 361);
+        adminCRUDFrame = createLabel("/image/menuadmin.png", 180, 180);
+        hoverAdmin = createLabel("/image/hoveradmin.png", 0, 361);
+        obat = createLabel("/image/addobat.png", 465, 180);
+        hoverObat = createLabel("/image/hoverobat.png", 0, 361);
         kasir = createLabel("/image/kasir.png", 750, 180);
-        kasir_hover = createLabel("/image/hoverkasir.png", 0, 361);
-        home_jl_keluar = createLabel("/image/logout.png", 30, 530);
+        hoverKasir = createLabel("/image/hoverkasir.png", 0, 361);
+        logoutLabel = createLabel("/image/logout.png", 30, 530);
 
-        getContentPane().add(adduser);
-        getContentPane().add(hoveruser);
-        getContentPane().add(addobat);
-        getContentPane().add(dbobat_hover);
+        getContentPane().add(adminCRUDFrame);
+        getContentPane().add(hoverAdmin);
+        getContentPane().add(obat);  
+        getContentPane().add(hoverObat);
         getContentPane().add(kasir);
-        getContentPane().add(kasir_hover);
-        getContentPane().add(home_jl_keluar);
+        getContentPane().add(hoverKasir);
+        getContentPane().add(logoutLabel);
 
         getContentPane().setBackground(new Color(8, 63, 89));
 
@@ -96,51 +89,51 @@ public class Home extends JFrame {
     }
 
     private void addActionListeners() {
-        home_jl_keluar.addMouseListener(new MouseAdapter() {
+        logoutLabel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 logout();
             }
         });
 
-        adduser.addMouseListener(new MouseAdapter() {
+        adminCRUDFrame.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
-                handleMouseEnter(adduser, "/image/menuadmin.png", hoveruser, true);
+                handleMouseEnter(adminCRUDFrame, "/image/menuadmin.png", hoverAdmin, true);
             }
 
             public void mouseExited(MouseEvent e) {
-                handleMouseEnter(adduser, "/image/menuadmin.png", hoveruser, false);
+                handleMouseEnter(adminCRUDFrame, "/image/menuadmin.png", hoverAdmin, false);
             }
 
             public void mouseClicked(MouseEvent e) {
-                openAddAdminGUI();
+                openAdminCRUDFrame();
             }
         });
 
-        addobat.addMouseListener(new MouseAdapter() {
+        obat.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
-                handleMouseEnter(addobat, "/image/addobat.png", dbobat_hover, true);
+                handleMouseEnter(obat, "/image/addobat.png", hoverObat, true);
             }
 
             public void mouseExited(MouseEvent e) {
-                handleMouseEnter(addobat, "/image/addobat.png", dbobat_hover, false);
+                handleMouseEnter(obat, "/image/addobat.png", hoverObat, false);
             }
 
             public void mouseClicked(MouseEvent e) {
-                openAddObatGUI();
+                openObatGUI();
             }
         });
 
         kasir.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
-                handleMouseEnter(kasir, "/image/kasir.png", kasir_hover, true);
+                handleMouseEnter(kasir, "/image/kasir.png", hoverKasir, true);
             }
 
             public void mouseExited(MouseEvent e) {
-                handleMouseEnter(kasir, "/image/kasir.png", kasir_hover, false);
+                handleMouseEnter(kasir, "/image/kasir.png", hoverKasir, false);
             }
 
             public void mouseClicked(MouseEvent e) {
-                openBayarKasirGUI();
+                openKasirGUI();  
             }
         });
     }
@@ -150,67 +143,20 @@ public class Home extends JFrame {
         hoverLabel.setVisible(showHover);
     }
 
-    private void openAddAdminGUI() {
-        new AddAdminGUI();
-    }
-
-<<<<<<< HEAD
-    private void openAddObatGUI() {
-        new AddObatGUI();
-    }
-
-    private void openBayarKasirGUI() {
-        new BayarKasirGUI();
-=======
-    private class MenuAdminListener extends FeatureListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            openAdminCRUDFrame();
-        }
-    }
-
-    private class AddObatListener extends FeatureListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-//            openAddObatForm();
-        }
-    }
-
-    private class KasirListener extends FeatureListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-//            openKasirTransaction();
-        }
-    }
-
-    private class LogoutListener extends FeatureListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            logout();
-        }
-    }
-
     private void openAdminCRUDFrame() {
-        // Create an instance of AdminCRUDFrame and show it
-        AdminCRUDFrame adminCRUDFrame = new AdminCRUDFrame();
-        adminCRUDFrame.setVisible(true);
->>>>>>> bfba401c6b0f2a27329955078a093f66fe1298c8
+        new AdminCRUDFrame();
     }
-//
-//    private void openAddObatForm() {
-//        // Logika untuk tindakan saat add obat diklik
-//        AddObatForm addObatForm = new AddObatForm();
-//        addObatForm.showGUI();
-//    }
-//
-//    private void openKasirTransaction() {
-//        // Logika untuk tindakan saat kasir diklik
-//        KasirTransaction kasirTransaction = new KasirTransaction();
-//        kasirTransaction.showGUI();
-//    }
+
+    private void openObatGUI() {  
+        new Obat();
+    }
+
+    private void openKasirGUI() {  
+        new Kasir();
+    }
 
     private void logout() {
         dispose();
         new Login().showGUI();
     }
-
+}
