@@ -38,6 +38,7 @@ public class Home extends JFrame {
         JOptionPane.showMessageDialog(null, "Login Berhasil", "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
     }
 
+<<<<<<< HEAD
     private void userInterface() {
         waktu = new LabelTime();
         waktu.setForeground(Color.WHITE);
@@ -48,6 +49,12 @@ public class Home extends JFrame {
 
         getContentPane().add(waktu);
         waktu.setBounds(750, 520, 300, 40);
+=======
+    private void addTitle() {
+//        ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/judul.png")));
+//        JLabel label = new JLabel(image);
+//        frame.getContentPane().add(label, BorderLayout.NORTH);
+>>>>>>> bfba401c6b0f2a27329955078a093f66fe1298c8
     }
 
     private void initializeComponents() {
@@ -147,13 +154,60 @@ public class Home extends JFrame {
         new AddAdminGUI();
     }
 
+<<<<<<< HEAD
     private void openAddObatGUI() {
         new AddObatGUI();
     }
 
     private void openBayarKasirGUI() {
         new BayarKasirGUI();
+=======
+    private class MenuAdminListener extends FeatureListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            openAdminCRUDFrame();
+        }
     }
+
+    private class AddObatListener extends FeatureListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+//            openAddObatForm();
+        }
+    }
+
+    private class KasirListener extends FeatureListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+//            openKasirTransaction();
+        }
+    }
+
+    private class LogoutListener extends FeatureListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            logout();
+        }
+    }
+
+    private void openAdminCRUDFrame() {
+        // Create an instance of AdminCRUDFrame and show it
+        AdminCRUDFrame adminCRUDFrame = new AdminCRUDFrame();
+        adminCRUDFrame.setVisible(true);
+>>>>>>> bfba401c6b0f2a27329955078a093f66fe1298c8
+    }
+//
+//    private void openAddObatForm() {
+//        // Logika untuk tindakan saat add obat diklik
+//        AddObatForm addObatForm = new AddObatForm();
+//        addObatForm.showGUI();
+//    }
+//
+//    private void openKasirTransaction() {
+//        // Logika untuk tindakan saat kasir diklik
+//        KasirTransaction kasirTransaction = new KasirTransaction();
+//        kasirTransaction.showGUI();
+//    }
 
     private void logout() {
         dispose();

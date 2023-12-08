@@ -7,7 +7,7 @@ public class KoneksiDB {
 
     public static Connection getKoneksi() {
         try {
-            String url = "jdbc:mysql://localhost:3306/apkilasiapotek";
+            String url = "jdbc:mysql://localhost:3306/aplikasiapotek";
             String user = "root";
             String password = "";
 

@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class Login {
@@ -91,11 +95,28 @@ public class Login {
     }
 
     private boolean isValidLogin(String username, char[] password) {
-        // Add your authentication logic here
-        // For example, you might check against a predefined username and password
-        String correctUsername = "admin";
-        String correctPassword = "admin123";
-        return username.equals(correctUsername) && new String(password).equals(correctPassword);
-    }
+        try {
+            // Establish a database connection
+            Connection connection = KoneksiDB.getKoneksi();
 
+            // Prepare a SQL query to check the username and password
+            String query = "SELECT * FROM admin WHERE username=? AND password=?";
+            try (PreparedStatement preparedStatement = ((Connection) connection).prepareStatement(query)) {
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, new String(password));
+
+                // Execute the query
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    // If a matching record is found, return true
+                    return resultSet.next();
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            // Handle the exception (e.g., show an error message)
+        }
+
+        // Return false if the authentication fails
+        return false;
+    }
 }
