@@ -1,10 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
 
 public class Home extends JFrame {
+    private final String nama = null;
     private JLabel adminCRUDFrame;
     private JLabel obat;  
     private JLabel kasir;
@@ -14,28 +17,90 @@ public class Home extends JFrame {
     private JLabel logoutLabel;
     private JLabel menuLabel;
     private Waktu waktu;
+    private JFrame frame;
+    private JPanel featuresPanel;
+    private Color backgroundColor;
 
-    public Home(String nama) {
+    public void showGUI() {
         initializeFrame();
-        initializeComponents();
-        addActionListeners();
-
-        JOptionPane.showMessageDialog(null, "Selamat Datang " + nama, "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
-
-        userInterface();
-
-        setVisible(true);
+        addFeatureButtons();
+        configureFrame();
+        //initializeComponents();
     }
 
     private void initializeFrame() {
+<<<<<<< HEAD
         setLocation(120, 50);
         setSize(640, 480);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Menu Admin Apotek Unjani Kelompok 4");
         setLocationRelativeTo(null);
         setResizable(false);
+=======
+        frame = new JFrame("Home - Apotek Kelompok 4");
+        String hexColor = "#0D3749";
+        backgroundColor = Color.decode(hexColor);
+
+        ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/judulmenuadmin.png")));
+        JLabel label = new JLabel(image);
+
+        Font labelFont = label.getFont();
+        label.setFont(new Font(labelFont.getName(), Font.PLAIN, 10)); // Ganti 18 dengan ukuran font yang diinginkan
+>>>>>>> c7230d1eb3dcafed362ff8ec0cfd825011e78f0c
 
         JOptionPane.showMessageDialog(null, "Login Berhasil", "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
+
+        frame.getContentPane().add(label, BorderLayout.NORTH); // judul
+        frame.getContentPane().setBackground(backgroundColor);
+        frame.setSize(640, 480);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(true);
+    }
+
+    private void configureFrame() {
+        frame.setVisible(true);
+    }
+
+    private void addFeatureButtons() {
+        featuresPanel = new JPanel(new GridLayout(1, 3)); // Menggunakan GridLayout dengan 1 baris dan 3 kolom
+        String hexColor = "#0D3749";
+        backgroundColor = Color.decode(hexColor);
+        featuresPanel.setBackground(backgroundColor);
+
+        addButton("Menu Admin", "/images/menuadmin.png", new MenuAdminListener());
+        addButton("Add Obat", "/images/addobat.png", new AddObatListener());
+        addButton("Kasir", "/images/kasir.png", new KasirListener());
+
+        JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Menggunakan FlowLayout untuk tombol logout di kiri
+        logoutPanel.setBackground(backgroundColor);
+        addButton("Logout", "/images/logout.png", new LogoutListener(), logoutPanel);
+
+        // Menambahkan featuresPanel ke bagian bawah frame
+        frame.getContentPane().add(featuresPanel, BorderLayout.CENTER);
+        frame.getContentPane().add(logoutPanel, BorderLayout.SOUTH);
+    }
+
+    private void addButton(String label, String imagePath, ActionListener listener) {
+        JButton button = createFeatureButton(imagePath);
+        button.addActionListener(listener);
+        featuresPanel.add(button);
+    }
+
+    private void addButton(String label, String imagePath, ActionListener listener, JPanel panel) {
+        JButton button = createFeatureButton(imagePath);
+        button.addActionListener(listener);
+        panel.add(button);
+    }
+
+
+    private JButton createFeatureButton(String imagePath) {
+        JButton button = new JButton(new ImageIcon(Objects.requireNonNull(Login.class.getResource(imagePath))));
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.setOpaque(false);
+        return button;
     }
 
     private void userInterface() {
@@ -51,8 +116,6 @@ public class Home extends JFrame {
     }
 
     private void initializeComponents() {
-        getContentPane().setLayout(null);
-
         adminCRUDFrame = createLabel("/image/menuadmin.png", 180, 180);
         hoverAdmin = createLabel("/image/hoveradmin.png", 0, 361);
         obat = createLabel("/image/addobat.png", 465, 180);
@@ -63,13 +126,13 @@ public class Home extends JFrame {
 
         getContentPane().add(adminCRUDFrame);
         getContentPane().add(hoverAdmin);
-        getContentPane().add(obat);  
+        getContentPane().add(obat);
         getContentPane().add(hoverObat);
         getContentPane().add(kasir);
         getContentPane().add(hoverKasir);
         getContentPane().add(logoutLabel);
 
-        getContentPane().setBackground(new Color(8, 63, 89));
+//        getContentPane().setBackground(new Color(8, 63, 89));
 
         menuLabel = new JLabel("");
         menuLabel.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/image/titlemenu.png"))));
@@ -79,6 +142,40 @@ public class Home extends JFrame {
         menuLabel.setBounds(0, 21, 1084, 139);
 
         getContentPane().add(menuLabel);
+        frame.getContentPane();
+    }
+
+    private abstract class FeatureListener implements ActionListener {
+        @Override
+        public abstract void actionPerformed(ActionEvent e);
+    }
+
+    private class MenuAdminListener extends FeatureListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            openAdminCRUDFrame();
+        }
+    }
+
+    private class AddObatListener extends FeatureListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+//            openAddObatForm();
+        }
+    }
+
+    private class KasirListener extends FeatureListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+//            openKasirTransaction();
+        }
+    }
+
+    private class LogoutListener extends FeatureListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            logout();
+        }
     }
 
     private JLabel createLabel(String imagePath, int x, int y) {
@@ -144,6 +241,7 @@ public class Home extends JFrame {
     }
 
     private void openAdminCRUDFrame() {
+        frame.setVisible(false);
         new AdminCRUDFrame();
     }
 
@@ -152,7 +250,7 @@ public class Home extends JFrame {
     }
 
     private void openKasirGUI() {  
-        new Kasir();
+//        new Kasir();
     }
 
     private void logout() {

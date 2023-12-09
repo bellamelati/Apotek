@@ -58,37 +58,65 @@ public class AdminCRUDFrame extends JFrame {
         inputPanel.add(passwordField);
 
 
-        JPanel crudPanel = new JPanel(new GridLayout(1, 4, 10, 10));
+        JPanel crudPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         crudPanel.setBackground(backgroundColor);
 
         ImageIcon addImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturtambah.png")));
         JButton addButton = new JButton(addImage);
-        customizeButton(addButton);
+        addButton.setBorderPainted(false);
+        addButton.setContentAreaFilled(false);
+        addButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
+
 
         ImageIcon updateButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturubah.png")));
         JButton updateButton = new JButton(updateButtonImage);
-        customizeButton(updateButton);
+        updateButton.setBorderPainted(false);
+        updateButton.setContentAreaFilled(false);
+        updateButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
+
 
         ImageIcon deleteButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturhapus.png")));
         JButton deleteButton = new JButton(deleteButtonImage);
-        customizeButton(deleteButton);
+        deleteButton.setBorderPainted(false);
+        deleteButton.setContentAreaFilled(false);
+        deleteButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
 
         ImageIcon clearButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/bersih.png")));
         JButton clearAllButton = new JButton(clearButtonImage);
-        customizeButton(clearAllButton);
-
-        ImageIcon SearchButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/kcari.png")));
-        JButton SearchButton = new JButton(SearchButtonImage);
-        customizeButton(clearAllButton);
+        clearAllButton.setBorderPainted(false);
+        clearAllButton.setContentAreaFilled(false);
+        clearAllButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
 
         crudPanel.add(addButton);
         crudPanel.add(updateButton);
         crudPanel.add(deleteButton);
         crudPanel.add(clearAllButton);
-        crudPanel.add(SearchButton);
 
         inputPanel.add(crudPanel);
         add(inputPanel, BorderLayout.CENTER);
+
+        // Create search panel
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        searchPanel.setBackground(backgroundColor);
+
+        JLabel searchLabel = new JLabel("ID_ADMIN");
+        searchLabel.setFont(labelFont);
+        searchLabel.setForeground(Color.WHITE);
+        searchField = new JTextField(15);
+
+
+        ImageIcon searchButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/cariadmin.png")));
+        JButton searchButton = new JButton(searchButtonImage);
+        searchButton.setBorderPainted(false);
+        searchButton.setContentAreaFilled(false);
+        searchButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
+
+        searchPanel.add(searchLabel);
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+
+        inputPanel.add(searchPanel);
+        // add(searchPanel, BorderLayout.CENTER);
 
 
         // Create a table model with columns
@@ -127,7 +155,7 @@ public class AdminCRUDFrame extends JFrame {
             }
         });
 
-        SearchButton.addActionListener(new ActionListener() {
+        searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 searchAdmin();
