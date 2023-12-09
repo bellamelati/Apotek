@@ -29,7 +29,7 @@ public class Home extends JFrame {
 
     private void initializeFrame() {
         setLocation(120, 50);
-        setSize(1100, 640);
+        setSize(640, 480);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Menu Admin Apotek Unjani Kelompok 4");
         setLocationRelativeTo(null);
