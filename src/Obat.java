@@ -14,7 +14,6 @@ public class Obat extends JFrame {
     private JLabel ubahLabel;
     private JLabel bersihLabel;
     private JLabel cariLabel;
-
     private JLabel kodeObatLabel;
     private JTextField kodeObatField;
     private JLabel namaObatLabel;
@@ -58,6 +57,7 @@ public class Obat extends JFrame {
     private void initializeFrame() {
         setLocation(220, 10);
         setSize(640, 480);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Database Obat");
     }
