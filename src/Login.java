@@ -10,6 +10,12 @@ import java.util.Objects;
 
 public class Login {
     public void showGUI(){
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
         // Membuat frame dan memberi warna background
         JFrame frame = new JFrame("Apotek");
         String hexColor = "#0D3749";
@@ -51,7 +57,7 @@ public class Login {
         });
 
         // Mengatur font, size, warna
-        Font labelFont = new Font("Rockwell", Font.BOLD, 17);
+        Font labelFont = new Font("SansSerif", Font.BOLD, 17);
         usernameLabel.setFont(labelFont);
         passwordLabel.setFont(labelFont);
         usernameLabel.setForeground(Color.WHITE);
