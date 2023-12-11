@@ -226,16 +226,12 @@ public class Obat extends JFrame {
             DefaultTableModel model = (DefaultTableModel) obatTable.getModel();
             String kodeObat = model.getValueAt(selectedRow, 0).toString();
 
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM db_obat WHERE ID_Obat = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM obat WHERE Kode_Obat = ?");
             preparedStatement.setString(1, kodeObat);
             preparedStatement.executeUpdate();
             preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        new Obat();
     }
 }
