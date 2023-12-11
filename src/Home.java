@@ -29,12 +29,6 @@ public class Home extends JFrame {
     }
 
     private void initializeFrame() {
-        setLocation(120, 50);
-        setSize(640, 480);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Menu Admin Apotek Unjani Kelompok 4");
-        setLocationRelativeTo(null);
-        setResizable(false);
         frame = new JFrame("Home - Apotek Kelompok 4");
         String hexColor = "#0D3749";
         backgroundColor = Color.decode(hexColor);
@@ -45,16 +39,15 @@ public class Home extends JFrame {
         Font labelFont = label.getFont();
         label.setFont(new Font(labelFont.getName(), Font.PLAIN, 10)); // Ganti 18 dengan ukuran font yang diinginkan
 
-
         JOptionPane.showMessageDialog(null, "Login Berhasil", "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
 
         frame.getContentPane().add(label, BorderLayout.NORTH); // judul
         frame.getContentPane().setBackground(backgroundColor);
-        frame.setSize(640, 480);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);  // Maximize the frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
         frame.setResizable(true);
     }
+
 
     private void configureFrame() {
         frame.setVisible(true);
