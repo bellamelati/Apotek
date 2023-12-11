@@ -201,7 +201,7 @@ public class Obat extends JFrame {
             model.setRowCount(0);
 
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM db_obat");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM obat");
 
             while (resultSet.next()) {
                 Vector<Object> rowData = new Vector<>();
