@@ -54,7 +54,8 @@ public class AdminCRUDFrame extends JFrame {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new AdminCRUDFrame();
+                Home home = new Home();
+                home.showGUI();
                 dispose();
             }
         });
