@@ -26,7 +26,7 @@ public class AdminCRUDFrame extends JFrame {
 
         int paddingSize = 20; // Sesuaikan dengan ukuran padding yang diinginkan
 
-        ImageIcon image = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/Menuaddadmin_r.png")));
+        ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/Menuaddadmin_r.png")));
         JLabel titleLabel = new JLabel(image);
         JPanel titlePanel = new JPanel(new GridLayout(2, 1, 0, 0));
 
@@ -40,7 +40,7 @@ public class AdminCRUDFrame extends JFrame {
 
 
         
-        ImageIcon backImages = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/backbutton.png")));
+        ImageIcon backImages = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/backbutton.png")));
         JButton backButton = new JButton(backImages);
         backButton.setPreferredSize(new Dimension(10,10));
 
@@ -54,7 +54,7 @@ public class AdminCRUDFrame extends JFrame {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new MenuAdmin();
+                new AdminCRUDFrame();
                 dispose();
             }
         });
@@ -100,27 +100,27 @@ public class AdminCRUDFrame extends JFrame {
         JPanel crudPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         crudPanel.setBackground(backgroundColor);
 
-        ImageIcon addImage = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/fiturtambah.png")));
+        ImageIcon addImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturtambah.png")));
         JButton addButton = new JButton(addImage);
         addButton.setBorderPainted(false);
         addButton.setContentAreaFilled(false);
         addButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
 
         
-        ImageIcon updateButtonImage = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/fiturubah.png")));
+        ImageIcon updateButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturubah.png")));
         JButton updateButton = new JButton(updateButtonImage);
         updateButton.setBorderPainted(false);
         updateButton.setContentAreaFilled(false);
         updateButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
 
 
-        ImageIcon deleteButtonImage = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/fiturhapus.png")));
+        ImageIcon deleteButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturhapus.png")));
         JButton deleteButton = new JButton(deleteButtonImage);
         deleteButton.setBorderPainted(false);
         deleteButton.setContentAreaFilled(false);
         deleteButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
 
-        ImageIcon clearButtonImage = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/bersih.png")));
+        ImageIcon clearButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/bersih.png")));
         JButton clearAllButton = new JButton(clearButtonImage);
         clearAllButton.setBorderPainted(false);
         clearAllButton.setContentAreaFilled(false);
@@ -159,7 +159,7 @@ public class AdminCRUDFrame extends JFrame {
         searchField = new JTextField(20);
 
 
-        ImageIcon searchButtonImage = new ImageIcon(Objects.requireNonNull(LoginFrame.class.getResource("/images/cariadmin.png")));
+        ImageIcon searchButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/cariadmin.png")));
         JButton searchButton = new JButton(searchButtonImage);
         searchButton.setBorderPainted(false);
         searchButton.setContentAreaFilled(false);

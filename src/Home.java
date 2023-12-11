@@ -25,18 +25,16 @@ public class Home extends JFrame {
         initializeFrame();
         addFeatureButtons();
         configureFrame();
-        //initializeComponents();
+        initializeComponents();
     }
 
     private void initializeFrame() {
-<<<<<<< HEAD
         setLocation(120, 50);
         setSize(640, 480);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Menu Admin Apotek Unjani Kelompok 4");
         setLocationRelativeTo(null);
         setResizable(false);
-=======
         frame = new JFrame("Home - Apotek Kelompok 4");
         String hexColor = "#0D3749";
         backgroundColor = Color.decode(hexColor);
@@ -46,7 +44,7 @@ public class Home extends JFrame {
 
         Font labelFont = label.getFont();
         label.setFont(new Font(labelFont.getName(), Font.PLAIN, 10)); // Ganti 18 dengan ukuran font yang diinginkan
->>>>>>> c7230d1eb3dcafed362ff8ec0cfd825011e78f0c
+
 
         JOptionPane.showMessageDialog(null, "Login Berhasil", "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
 
@@ -69,7 +67,7 @@ public class Home extends JFrame {
         featuresPanel.setBackground(backgroundColor);
 
         addButton("Menu Admin", "/images/menuadmin.png", new MenuAdminListener());
-        addButton("Add Obat", "/images/addobat.png", new AddObatListener());
+        addButton("Add Obat", "/images/addobat.png", new ObatListener());
         addButton("Kasir", "/images/kasir.png", new KasirListener());
 
         JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Menggunakan FlowLayout untuk tombol logout di kiri
@@ -157,10 +155,10 @@ public class Home extends JFrame {
         }
     }
 
-    private class AddObatListener extends FeatureListener {
+    private class ObatListener extends FeatureListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-//            openAddObatForm();
+            openObatGUI();
         }
     }
 
@@ -246,6 +244,7 @@ public class Home extends JFrame {
     }
 
     private void openObatGUI() {  
+        frame.setVisible(false);
         new Obat();
     }
 

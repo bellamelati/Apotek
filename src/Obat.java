@@ -5,7 +5,7 @@ import javax.swing.table.*;
 import java.util.Date;
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import com.toedter.calendar.JDateChooser;
+//import com.toedter.calendar.JDateChooser;
 
 
 public class Obat extends JFrame {
@@ -35,7 +35,7 @@ public class Obat extends JFrame {
     private JTextField keteranganField;
 
     private JLabel expDateLabel;
-    private JDateChooser expDateChooser;
+//    private JDateChooser expDateChooser;
 
     private JTextField cariField;
 
@@ -43,12 +43,12 @@ public class Obat extends JFrame {
     private JTable obatTable;
     private JScrollPane tableScrollPane;
 
-    private LabelTime waktu;
+//    private LabelTime waktu;
 
     public Obat() {
         initializeFrame();
-        initializeComponents();
-        addActionListeners();
+   //     initializeComponents();
+   //     addActionListeners();
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
@@ -60,3 +60,21 @@ public class Obat extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Database Obat");
     }
+
+    private class AddObatListener extends FeatureListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            openObatGUI();
+        }
+
+        private void openObatGUI() {
+            new Obat();
+        }
+    }
+
+    private abstract class FeatureListener implements ActionListener {
+        @Override
+        public abstract void actionPerformed(ActionEvent e);
+    }
+
+}
