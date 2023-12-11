@@ -48,9 +48,11 @@ public class Login {
                 // Replace the following condition with your actual login logic
                 if (isValidLogin(enteredUsername, enteredPassword)) {
                     // If login is successful, open the Home class
+                    JOptionPane.showMessageDialog(null, "Login Berhasil", "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
                     frame.dispose(); // Close the login frame
                     Home home = new Home();
                     home.showGUI();
+
                 } else {
                     // If login fails, you can show an error message or take other actions
                     JOptionPane.showMessageDialog(frame, "Invalid username or password", "Login Error", JOptionPane.ERROR_MESSAGE);

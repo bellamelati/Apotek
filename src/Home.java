@@ -39,7 +39,7 @@ public class Home extends JFrame {
         Font labelFont = label.getFont();
         label.setFont(new Font(labelFont.getName(), Font.PLAIN, 10)); // Ganti 18 dengan ukuran font yang diinginkan
 
-        JOptionPane.showMessageDialog(null, "Login Berhasil", "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
+
 
         frame.getContentPane().add(label, BorderLayout.NORTH); // judul
         frame.getContentPane().setBackground(backgroundColor);
