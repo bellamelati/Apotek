@@ -57,7 +57,7 @@ public class Obat extends JFrame {
 
     private void initializeFrame() {
         setLocation(220, 10);
-        setSize(833, 689);
+        setSize(640, 480);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Database Obat");
     }
