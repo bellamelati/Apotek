@@ -236,7 +236,7 @@ public class Home extends JFrame {
         new AdminCRUDFrame();
     }
 
-    private void openObatGUI() {  
+    private void openObatGUI() {
         frame.setVisible(false);
         new Obat();
     }
