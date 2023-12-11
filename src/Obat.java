@@ -49,8 +49,7 @@ public class Obat extends JFrame {
 
     private void initializeDatabaseConnection() {
         try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/apkapotek", "root", "");
+            connection = KoneksiDB.getKoneksi();
         } catch (Exception e) {
             e.printStackTrace();
         }
