@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 public class Obat extends JFrame {
 
     // Komponen GUI
+    private Home home;
     private JLabel tambahLabel;
     private JLabel hapusLabel;
     private JLabel ubahLabel;
@@ -16,27 +17,20 @@ public class Obat extends JFrame {
     private JLabel cariLabel;
     private JLabel logoLabel;
     private JLabel titleLabel;
-
+    private JButton backButton;
     private JLabel kodeObatLabel;
     private JTextField kodeObatField;
-
     private JLabel namaObatLabel;
     private JTextField namaObatField;
-
     private JLabel hargaLabel;
     private JTextField hargaField;
-
     private JLabel stokLabel;
     private JTextField stokField;
-
     private JLabel keteranganLabel;
     private JTextField keteranganField;
-
     private JLabel expDateLabel;
     private JTextField expDateField; // Use JTextField instead of JDateChooser
-
     private JTextField cariField;
-
     private DefaultTableModel tableModel;
     private JTable obatTable;
     private JScrollPane tableScrollPane;
@@ -117,6 +111,22 @@ public class Obat extends JFrame {
 
         add(inputPanel, BorderLayout.NORTH);
         add(tableScrollPane, BorderLayout.CENTER);
+
+        // Tambahkan tombol back
+        backButton = new JButton("Back");
+        backButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        backButton.setBackground(Color.WHITE);
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();  // Tutup frame saat tombol back ditekan
+            }
+        });
+
+        // Tambahkan tombol back ke bawah frame
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(backButton);
+        add(buttonPanel, BorderLayout.SOUTH);
     }
 
     private void addActionListeners() {
@@ -133,7 +143,14 @@ public class Obat extends JFrame {
             }
         });
 
-        // Add more action listeners as needed
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Kembali ke kelas Home
+                dispose(); // Tutup frame saat tombol back ditekan
+                home = new Home();
+            }
+        });
     }
 
 }

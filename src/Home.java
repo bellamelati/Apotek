@@ -158,7 +158,7 @@ public class Home extends JFrame {
     private class KasirListener extends FeatureListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-//            openKasirTransaction();
+            openKasirGUI();
         }
     }
 

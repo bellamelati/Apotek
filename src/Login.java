@@ -35,9 +35,10 @@ public class Login {
 
         JLabel usernameLabel = new JLabel("Username:");
         JLabel passwordLabel = new JLabel("Password:");
-        JTextField usernameField = new JTextField(15);
-        JPasswordField passwordField = new JPasswordField(15);
+        JTextField usernameField = new JTextField(20);
+        JPasswordField passwordField = new JPasswordField(20);
         JButton loginButton = new JButton("Login");
+        loginButton.setPreferredSize(new Dimension(270, 40));
 
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -61,7 +62,7 @@ public class Login {
         });
 
         // Mengatur font, size, warna
-        Font labelFont = new Font("SansSerif", Font.BOLD, 17);
+        Font labelFont = new Font("SansSerif", Font.BOLD, 20);
         usernameLabel.setFont(labelFont);
         passwordLabel.setFont(labelFont);
         usernameLabel.setForeground(Color.WHITE);
@@ -69,21 +70,21 @@ public class Login {
         loginButton.setFont(labelFont);
 
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
         loginPanel.add(usernameLabel, gbc);
 
         gbc.gridx = 1;
         loginPanel.add(usernameField, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         loginPanel.add(passwordLabel, gbc);
 
         gbc.gridx = 1;
         loginPanel.add(passwordField, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.gridwidth = 2;
         loginPanel.add(loginButton, gbc);
 
