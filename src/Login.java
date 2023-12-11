@@ -27,12 +27,14 @@ public class Login {
         JLabel label = new JLabel(image);
 
         // Menambahkan form login
-        JPanel loginPanel = new JPanel();
-        loginPanel.setLayout(null);
+        JPanel loginPanel = new JPanel(new GridBagLayout());
         loginPanel.setBackground(backgroundColor);
 
-        JLabel usernameLabel = new JLabel("Username :");
-        JLabel passwordLabel = new JLabel("Password :");
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding
+
+        JLabel usernameLabel = new JLabel("Username:");
+        JLabel passwordLabel = new JLabel("Password:");
         JTextField usernameField = new JTextField(15);
         JPasswordField passwordField = new JPasswordField(15);
         JButton loginButton = new JButton("Login");
@@ -64,26 +66,24 @@ public class Login {
         passwordLabel.setForeground(Color.WHITE);
         loginButton.setFont(labelFont);
 
-        // Panel Username dan Password
-        JPanel usernamePanel = new JPanel(new FlowLayout());
-        usernamePanel.setBackground(backgroundColor);
-        usernamePanel.add(usernameLabel);
-        usernamePanel.add(usernameField);
-        usernamePanel.setBounds(160, 80, 300, 30);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        loginPanel.add(usernameLabel, gbc);
 
-        JPanel passwordPanel = new JPanel(new FlowLayout());
-        passwordPanel.setBackground(backgroundColor);
-        passwordPanel.add(passwordLabel);
-        passwordPanel.add(passwordField);
-        int yPosition = usernamePanel.getY() + usernamePanel.getHeight() + 10; // Menentukan posisi y untuk passwordPanel
-        passwordPanel.setBounds(160, yPosition, 300, 30); // Mengatur posisi dan ukuran passwordPanel
+        gbc.gridx = 1;
+        loginPanel.add(usernameField, gbc);
 
-        loginButton.setBounds(160, yPosition + passwordPanel.getHeight() + 10, 300, 30); // Mengatur posisi dan ukuran loginButton
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        loginPanel.add(passwordLabel, gbc);
 
-        // Menambahkan komponen form ke panel login
-        loginPanel.add(usernamePanel);
-        loginPanel.add(passwordPanel);
-        loginPanel.add(loginButton);
+        gbc.gridx = 1;
+        loginPanel.add(passwordField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        loginPanel.add(loginButton, gbc);
 
         // Menambahkan elemen-elemen ke dalam frame
         frame.getContentPane().add(label, BorderLayout.NORTH); // judul
@@ -92,6 +92,9 @@ public class Login {
         // Mengatur properti frame
         frame.setSize(640, 480);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Maximize the frame
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         // Menempatkan frame di tengah layar
         frame.setLocationRelativeTo(null);
