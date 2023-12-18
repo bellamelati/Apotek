@@ -120,6 +120,7 @@ public class Obat extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();  // Tutup frame saat tombol back ditekan
+                home.showGUI();
             }
         });
 

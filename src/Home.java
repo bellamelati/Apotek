@@ -40,7 +40,6 @@ public class Home extends JFrame {
         label.setFont(new Font(labelFont.getName(), Font.PLAIN, 10)); // Ganti 18 dengan ukuran font yang diinginkan
 
 
-
         frame.getContentPane().add(label, BorderLayout.NORTH); // judul
         frame.getContentPane().setBackground(backgroundColor);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);  // Maximize the frame
@@ -54,28 +53,32 @@ public class Home extends JFrame {
     }
 
     private void addFeatureButtons() {
-        featuresPanel = new JPanel(new GridLayout(1, 3)); // Menggunakan GridLayout dengan 1 baris dan 3 kolom
+        featuresPanel = new JPanel(new GridLayout(2, 3, 5, 0)); // 2 rows, 3 columns, with 10px horizontal and vertical gap
         String hexColor = "#0D3749";
         backgroundColor = Color.decode(hexColor);
         featuresPanel.setBackground(backgroundColor);
 
-        addButton("Menu Admin", "/images/menuadmin.png", new MenuAdminListener());
-        addButton("Add Obat", "/images/addobat.png", new ObatListener());
-        addButton("Kasir", "/images/kasir.png", new KasirListener());
+        addLabel("Admin", featuresPanel);
+        addLabel("Obat", featuresPanel);
+        addLabel("Kasir", featuresPanel);
 
-        JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Menggunakan FlowLayout untuk tombol logout di kiri
+        addButton("Menu Admin", "/images/menuadmin.png", new MenuAdminListener(), featuresPanel);
+        addButton("Add Obat", "/images/addobat.png", new ObatListener(), featuresPanel);
+        addButton("Kasir", "/images/kasir.png", new KasirListener(), featuresPanel);
+
+        JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         logoutPanel.setBackground(backgroundColor);
         addButton("Logout", "/images/logout.png", new LogoutListener(), logoutPanel);
 
-        // Menambahkan featuresPanel ke bagian bawah frame
         frame.getContentPane().add(featuresPanel, BorderLayout.CENTER);
         frame.getContentPane().add(logoutPanel, BorderLayout.SOUTH);
     }
 
-    private void addButton(String label, String imagePath, ActionListener listener) {
-        JButton button = createFeatureButton(imagePath);
-        button.addActionListener(listener);
-        featuresPanel.add(button);
+    private void addLabel(String labelText, JPanel panel) {
+        JLabel label = new JLabel(labelText);
+        label.setForeground(Color.WHITE);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(label);
     }
 
     private void addButton(String label, String imagePath, ActionListener listener, JPanel panel) {
@@ -83,7 +86,6 @@ public class Home extends JFrame {
         button.addActionListener(listener);
         panel.add(button);
     }
-
 
     private JButton createFeatureButton(String imagePath) {
         JButton button = new JButton(new ImageIcon(Objects.requireNonNull(Login.class.getResource(imagePath))));
