@@ -1,157 +1,264 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.*;
-import javax.swing.table.*;
-import java.util.Date;
-import java.sql.*;
-import java.text.SimpleDateFormat;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Objects;
 
 public class Obat extends JFrame {
-
-    // Komponen GUI
+    private JFrame frame;
+    private JPanel featuresPanel;
     private Home home;
-    private JLabel tambahLabel;
-    private JLabel hapusLabel;
-    private JLabel ubahLabel;
-    private JLabel bersihLabel;
-    private JLabel cariLabel;
-    private JLabel logoLabel;
-    private JLabel titleLabel;
-    private JButton backButton;
-    private JLabel kodeObatLabel;
-    private JTextField kodeObatField;
-    private JLabel namaObatLabel;
-    private JTextField namaObatField;
-    private JLabel hargaLabel;
-    private JTextField hargaField;
-    private JLabel stokLabel;
-    private JTextField stokField;
-    private JLabel keteranganLabel;
-    private JTextField keteranganField;
-    private JLabel expDateLabel;
-    private JTextField expDateField; // Use JTextField instead of JDateChooser
-    private JTextField cariField;
-    private DefaultTableModel tableModel;
+    private JTextField kodeObatField, namaObatField, hargaField, stokField, keteranganField, expDateField, cariField;
     private JTable obatTable;
-    private JScrollPane tableScrollPane;
+    private DefaultTableModel obatTableModel;
 
     public Obat() {
         initializeFrame();
         initializeComponents();
         addActionListeners();
-        setLocationRelativeTo(null);
-        setResizable(false);
-        setVisible(true);
     }
 
     private void initializeFrame() {
-        setLocation(220, 10);
-        setSize(833, 689);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setTitle("Database Obat");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame = new JFrame("Home - Apotek Kelompok 4");
+        String hexColor = "#0D3749";
+        Color backgroundColor = Color.decode(hexColor);
+        frame.getContentPane().setBackground(backgroundColor);
+
+        ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/menucariobat.png")));
+        JLabel label = new JLabel(image);
+
+        Font labelFont = label.getFont();
+        label.setFont(new Font(labelFont.getName(), Font.PLAIN, 10));
+
+        frame.getContentPane().add(label, BorderLayout.NORTH);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);  // Maximalkan frame
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(true);
+
+        // Create a panel to hold your features (Tambah, Hapus, etc.)
+        featuresPanel = new JPanel(new GridBagLayout());
+        featuresPanel.setBackground(backgroundColor);
+        frame.add(featuresPanel, BorderLayout.WEST);
+
+        // Create a table model with columns for Obat
+        String[] obatColumns = {"Kode Obat", "Nama Obat", "Harga", "Stok", "Keterangan", "Exp_Date"};
+        obatTableModel = new DefaultTableModel(obatColumns, 0);
+        obatTable = new JTable(obatTableModel);
+
+        // Set up sorting for the table
+        TableRowSorter<DefaultTableModel> obatSorter = new TableRowSorter<>(obatTableModel);
+        obatTable.setRowSorter(obatSorter);
+
+        JScrollPane obatTableScrollPane = new JScrollPane(obatTable);
+        obatTableScrollPane.setPreferredSize(new Dimension(500, 300));
+
+        // Add the table to the featuresPanel
+        featuresPanel.add(obatTableScrollPane);
     }
 
     private void initializeComponents() {
-        // Initialize your components here
+        String hexColor = "#0D3749";
+        Color backgroundColor = Color.decode(hexColor);
+        Color fontColor = Color.WHITE;
 
-        // Example:
-        tambahLabel = new JLabel("Tambah");
-        hapusLabel = new JLabel("Hapus");
-        ubahLabel = new JLabel("Ubah");
-        bersihLabel = new JLabel("Bersih");
-        cariLabel = new JLabel("Cari");
-        logoLabel = new JLabel("Logo");
-        titleLabel = new JLabel("Title");
+        // Set layout for the input panel
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBackground(backgroundColor);
 
-        kodeObatLabel = new JLabel("Kode Obat");
+        JLabel tambahLabel = new JLabel("Tambah");
+        JLabel hapusLabel = new JLabel("Hapus");
+        JLabel ubahLabel = new JLabel("Ubah");
+        JLabel bersihLabel = new JLabel("Bersih");
+        JLabel cariLabel = new JLabel("Cari");
+        JLabel logoLabel = new JLabel("Logo");
+        JLabel titleLabel = new JLabel("Title");
+
+        // Set font color for labels
+        tambahLabel.setForeground(fontColor);
+        hapusLabel.setForeground(fontColor);
+        ubahLabel.setForeground(fontColor);
+        bersihLabel.setForeground(fontColor);
+        cariLabel.setForeground(fontColor);
+        logoLabel.setForeground(fontColor);
+        titleLabel.setForeground(fontColor);
+
         kodeObatField = new JTextField();
-
-        namaObatLabel = new JLabel("Nama Obat");
         namaObatField = new JTextField();
-
-        hargaLabel = new JLabel("Harga");
         hargaField = new JTextField();
-
-        stokLabel = new JLabel("Stok");
         stokField = new JTextField();
-
-        keteranganLabel = new JLabel("Keterangan");
         keteranganField = new JTextField();
-
-        expDateLabel = new JLabel("Exp_Date");
-        expDateField = new JTextField(); // Use JTextField instead of JDateChooser
-
+        expDateField = new JTextField();
         cariField = new JTextField();
 
-        // Initialize the table and table model
-        String[] columnNames = {"Kode Obat", "Nama Obat", "Harga", "Stok", "Keterangan", "Exp_Date"};
-        tableModel = new DefaultTableModel(columnNames, 0);
-        obatTable = new JTable(tableModel);
-        tableScrollPane = new JScrollPane(obatTable);
+        // Set font size for text fields
+        Font fieldFont = new Font("Arial", Font.PLAIN, 18);
+        kodeObatField.setFont(fieldFont);
+        namaObatField.setFont(fieldFont);
+        hargaField.setFont(fieldFont);
+        stokField.setFont(fieldFont);
+        keteranganField.setFont(fieldFont);
+        expDateField.setFont(fieldFont);
+        cariField.setFont(fieldFont);
 
-        // Add components to the frame
         setLayout(new BorderLayout());
-        JPanel inputPanel = new JPanel(new GridLayout(7, 2));
 
-        // Add your components to the inputPanel
-        // Example:
-        inputPanel.add(kodeObatLabel);
-        inputPanel.add(kodeObatField);
-        inputPanel.add(namaObatLabel);
-        inputPanel.add(namaObatField);
-        inputPanel.add(hargaLabel);
-        inputPanel.add(hargaField);
-        inputPanel.add(stokLabel);
-        inputPanel.add(stokField);
-        inputPanel.add(keteranganLabel);
-        inputPanel.add(keteranganField);
-        inputPanel.add(expDateLabel);
-        inputPanel.add(expDateField);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 5, 5, 5);
 
-        add(inputPanel, BorderLayout.NORTH);
-        add(tableScrollPane, BorderLayout.CENTER);
+        // Add image icon
+        ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/menucariobat.png")));
+        JLabel label = new JLabel(image);
+        gbc.gridwidth = 2;
+        inputPanel.add(label, gbc);
 
-        // Tambahkan tombol back
-        backButton = new JButton("Back");
+        // Reset gridwidth for labels and fields
+        gbc.gridwidth = 1;
+
+        gbc.gridy = 1;
+        gbc.gridx = 0;
+        inputPanel.add(new JLabel("Kode Obat"), gbc);
+        gbc.gridx = 1;
+        inputPanel.add(kodeObatField, gbc);
+
+        gbc.gridy = 2;
+        gbc.gridx = 0;
+        inputPanel.add(new JLabel("Nama Obat"), gbc);
+        gbc.gridx = 1;
+        inputPanel.add(namaObatField, gbc);
+
+        gbc.gridy = 3;
+        gbc.gridx = 0;
+        inputPanel.add(new JLabel("Harga"), gbc);
+        gbc.gridx = 1;
+        inputPanel.add(hargaField, gbc);
+
+        gbc.gridy = 4;
+        gbc.gridx = 0;
+        inputPanel.add(new JLabel("Stok"), gbc);
+        gbc.gridx = 1;
+        inputPanel.add(stokField, gbc);
+
+        gbc.gridy = 5;
+        gbc.gridx = 0;
+        inputPanel.add(new JLabel("Keterangan"), gbc);
+        gbc.gridx = 1;
+        inputPanel.add(keteranganField, gbc);
+
+        gbc.gridy = 6;
+        gbc.gridx = 0;
+        inputPanel.add(new JLabel("Exp_Date"), gbc);
+        gbc.gridx = 1;
+        inputPanel.add(expDateField, gbc);
+
+        frame.add(inputPanel, BorderLayout.CENTER);
+
+        // Add the input fields and labels to the inputPanel
+        inputPanel.add(new JLabel("Kode Obat"), gbc);
+        inputPanel.add(kodeObatField, gbc);
+        inputPanel.add(new JLabel("Nama Obat"), gbc);
+        inputPanel.add(namaObatField, gbc);
+        inputPanel.add(new JLabel("Harga"), gbc);
+        inputPanel.add(hargaField, gbc);
+        inputPanel.add(new JLabel("Stok"), gbc);
+        inputPanel.add(stokField, gbc);
+        inputPanel.add(new JLabel("Keterangan"), gbc);
+        inputPanel.add(keteranganField, gbc);
+        inputPanel.add(new JLabel("Exp_Date"), gbc);
+        inputPanel.add(expDateField, gbc);
+
+        frame.add(inputPanel, BorderLayout.CENTER);
+
+        JButton backButton = new JButton("Back");
+        backButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        backButton.setBackground(Color.WHITE);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(backButton);
+        buttonPanel.setBackground(backgroundColor);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void addActionListeners() {
+        // Add your action listeners here
+        // For example, you can add listeners for buttons like tambahButton, hapusButton, etc.
+        // Also, add those buttons to the featuresPanel
+        JButton tambahButton = new JButton("Tambah");
+        JButton hapusButton = new JButton("Hapus");
+        JButton ubahButton = new JButton("Ubah");
+        JButton bersihButton = new JButton("Bersih");
+        JButton cariButton = new JButton("Cari");
+
+        tambahButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Implement the action for the "Tambah" button
+            }
+        });
+
+        hapusButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Implement the action for the "Hapus" button
+            }
+        });
+
+        ubahButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Implement the action for the "Ubah" button
+            }
+        });
+
+        bersihButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Implement the action for the "Bersih" button
+            }
+        });
+
+        cariButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Implement the action for the "Cari" button
+            }
+        });
+
+        JButton backButton = new JButton("Back");
         backButton.setFont(new Font("Arial", Font.PLAIN, 14));
         backButton.setBackground(Color.WHITE);
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();  // Tutup frame saat tombol back ditekan
-                home.showGUI();
-            }
-        });
-
-        // Tambahkan tombol back ke bawah frame
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(backButton);
-        add(buttonPanel, BorderLayout.SOUTH);
-    }
-
-    private void addActionListeners() {
-        // Add action listeners for buttons or labels if needed
-        // Example:
-        tambahLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                openObatGUI();
-            }
-
-            private void openObatGUI() {
-                new Obat();
-            }
-        });
-
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Kembali ke kelas Home
-                dispose(); // Tutup frame saat tombol back ditekan
+                dispose();
                 home = new Home();
             }
         });
+
+        // Add buttons to the featuresPanel
+        featuresPanel.add(tambahButton);
+        featuresPanel.add(hapusButton);
+        featuresPanel.add(ubahButton);
+        featuresPanel.add(bersihButton);
+        featuresPanel.add(cariButton);
+
+        frame.setVisible(true);
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new Obat();
+            }
+        });
+    }
 }
