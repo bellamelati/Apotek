@@ -39,7 +39,6 @@ public class AdminCRUDFrame extends JFrame {
         secondPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0)); // Atur margin bawah
 
 
-        
         ImageIcon backImages = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/backbutton.png")));
         JButton backButton = new JButton(backImages);
         backButton.setPreferredSize(new Dimension(10,10));
@@ -77,6 +76,7 @@ public class AdminCRUDFrame extends JFrame {
         codeLabel.setFont(labelFont);
 
         codeField = new JTextField();
+
         JLabel usernameLabel = new JLabel("Username");
         usernameLabel.setForeground(Color.WHITE);
         usernameLabel.setFont(labelFont);
