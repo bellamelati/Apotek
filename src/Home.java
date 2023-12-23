@@ -135,6 +135,16 @@ public class Home extends JFrame {
         menuLabel.setBounds(0, 21, 1084, 139);
 
         getContentPane().add(menuLabel);
+
+        // Create labels for admin, obat, and kasir below the picture
+        JLabel adminLabel = createLabel("Admin", "/image/menuadmin.png", 180, 361);
+        JLabel obatLabel = createLabel("Obat", "/image/addobat.png", 465, 361);
+        JLabel kasirLabel = createLabel("Kasir", "/image/kasir.png", 750, 361);
+
+        getContentPane().add(adminLabel);
+        getContentPane().add(obatLabel);
+        getContentPane().add(kasirLabel);
+
         frame.getContentPane();
     }
 
@@ -171,10 +181,14 @@ public class Home extends JFrame {
         }
     }
 
-    private JLabel createLabel(String imagePath, int x, int y) {
-        JLabel label = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePath))));
+    private JLabel createLabel(String labelText, String imagePath, int x, int y) {
+        JLabel label = new JLabel(labelText, new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePath))), SwingConstants.CENTER);
         label.setBounds(x, y, 170, 170);
         label.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        label.setVerticalTextPosition(SwingConstants.BOTTOM);
+        label.setHorizontalTextPosition(SwingConstants.CENTER);
+        label.setForeground(Color.WHITE);
+
         return label;
     }
 
