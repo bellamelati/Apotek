@@ -57,9 +57,9 @@ public class Obat extends JFrame {
         backgroundColor = Color.decode(hexColor);
         frame.getContentPane().setBackground(backgroundColor);
 
-        JPanel titlePanel = new JPanel(new GridLayout(2, 1, 1, 0));
+        JPanel titlePanel = new JPanel(new GridLayout(1, 1, 5, 5));
         titlePanel.setBackground(backgroundColor);
-        titlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0)); // Atur marg
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0)); // Atur marg
 
         ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/menucariobat.png")));
         JLabel titleLabel = new JLabel(image);
@@ -90,6 +90,7 @@ public class Obat extends JFrame {
         Font labelFont = new Font("Rockwell", Font.BOLD, 18);
 
         JPanel inputPanel = new JPanel(new GridLayout(3, 4, 10, 10));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 5, 0)); // Atur margin bawah
         inputPanel.setBackground(backgroundColor);
 
         kodeObatLabel = new JLabel("Kode Obat");
@@ -142,16 +143,13 @@ public class Obat extends JFrame {
         inputPanel.add(expDateLabel);
         inputPanel.add(expDateField);
 
-        //Initialize the table and table model
-        String[] columnNames = {"Kode Obat", "Nama Obat", "Harga", "Stok", "Keterangan", "Exp_Date"};
-        tableModel = new DefaultTableModel(columnNames, 10);
-        obatTable = new JTable(tableModel);
-        tableScrollPane = new JScrollPane(obatTable);
-
         JPanel twoPanel = new JPanel(new GridLayout(2, 3, 0, 0));
-        JPanel crudPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         twoPanel.setBackground(backgroundColor);
-        crudPanel.setBackground(backgroundColor);
+        twoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0)); // Atur margin bawah
+
+        JPanel crudPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        crudPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20)); // Atur margin bawah
+        crudPanel.setBackground(Color.red);
 
         ImageIcon addImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturtambah.png")));
         JButton addButton = new JButton(addImage);
@@ -177,18 +175,64 @@ public class Obat extends JFrame {
         clearAllButton.setContentAreaFilled(false);
         clearAllButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
 
+        // Add search label and field
+        cariLabel = new JLabel("Cari");
+        cariLabel.setForeground(Color.WHITE);
+        cariLabel.setFont(labelFont);
+
+        cariField = new JTextField(10);
+
+        // Add search button
+        ImageIcon searchButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/kcari.png")));
+        JButton searchButton = new JButton(searchButtonImage);
+        searchButton.setBorderPainted(false);
+        searchButton.setContentAreaFilled(false);
+        searchButton.setPreferredSize(new Dimension(searchButtonImage.getIconWidth(), searchButtonImage.getIconHeight()));
+
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10)); // Atur margin bawah
+        searchPanel.setBackground(Color.green);
+        searchPanel.add(cariLabel);
+        searchPanel.add(cariField);
+        searchPanel.add(searchButton);
+
         crudPanel.add(addButton);
         crudPanel.add(updateButton);
         crudPanel.add(deleteButton);
         crudPanel.add(clearAllButton);
 
+        // Add the table scroll pane to the table panel
+        JPanel tablePanel = new JPanel(new GridLayout(6, 0, 0, 0));
+        tablePanel.setBackground(backgroundColor);
+        tablePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0)); // Atur margin bawah
+        tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
+
+        // Create a table model with columns
+        String[] columns = {"Kode Obat", "Nama Obat", "Harga", "Stok", "Keterangan", "Exp_Date"};
+        tableModel = new DefaultTableModel(columns, 0);
+        obatTable = new JTable(tableModel);
+
+        // Set up sorting for the table
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        obatTable.setRowSorter(sorter);
+
+        JScrollPane tableScrollPane = new JScrollPane(obatTable);
+        tableScrollPane.add(Box.createVerticalStrut(500));
+        tableScrollPane.setBackground(backgroundColor);
+        tableScrollPane.setBorder(new EmptyBorder(5, 20, 20, 20));
+
+        tablePanel.add(tableScrollPane);
+        twoPanel.add(crudPanel);
+        twoPanel.add(searchPanel);
+
         firstPanel.add(inputPanel);
         firstPanel.add(twoPanel);
-        frame.getContentPane().add(firstPanel, BorderLayout.CENTER); // login
-        frame.getContentPane().add(tableScrollPane, BorderLayout.SOUTH);
+        secondPanel.add(tablePanel);
+        frame.getContentPane().add(firstPanel, BorderLayout.CENTER);
+        frame.getContentPane().add(secondPanel, BorderLayout.SOUTH);
     }
 
-//    private void tampilTabel() {
+    //    private void tampilTabel() {
 //        try {
 //            DefaultTableModel model = (DefaultTableModel) obatTable.getModel();
 //            model.setRowCount(0);
@@ -213,4 +257,11 @@ public class Obat extends JFrame {
 //            e.printStackTrace();
 //        }
 //    }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new Obat();
+            }
+        });
+    }
 }
