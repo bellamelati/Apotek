@@ -61,7 +61,7 @@ public class Obat extends JFrame {
         // Judul Panel menggunakan BorderLayout
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(backgroundColor);
-        titlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0)); // Atur marg
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0)); // Atur margin
 
         // Tombol Kembali
         ImageIcon backImages = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/backbutton.png")));
@@ -98,16 +98,16 @@ public class Obat extends JFrame {
     private void initializeComponents() {
         JPanel firstPanel = new JPanel(new GridLayout(2, 1, 0, 0));
         firstPanel.setBackground(backgroundColor);
-        firstPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0)); // Atur margin bawah
+        firstPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0)); // Atur margin
 
         JPanel secondPanel = new JPanel(new GridLayout(0, 1, 0, 0));
         secondPanel.setBackground(backgroundColor);
-        secondPanel.setBorder(BorderFactory.createEmptyBorder(1, 0, 5, 0)); // Atur margin bawah
+        secondPanel.setBorder(BorderFactory.createEmptyBorder(1, 0, 5, 0)); // Atur margin
 
         Font labelFont = new Font("Rockwell", Font.BOLD, 18);
 
         JPanel inputPanel = new JPanel(new GridLayout(3, 7, 10, 10));
-        inputPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 5, 0)); // Atur margin bawah
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 5, 0)); // Atur margin
         inputPanel.setBackground(backgroundColor);
 
         kodeObatLabel = new JLabel("Kode Obat");
@@ -162,35 +162,43 @@ public class Obat extends JFrame {
 
         JPanel twoPanel = new JPanel(new GridLayout(1, 7, 0, 0));
         twoPanel.setBackground(backgroundColor);
-        twoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0)); // Atur margin bawah
+        twoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0)); // Atur margin
 
         JPanel crudPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        crudPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 100)); // Atur margin bawah
+        crudPanel.setBorder(BorderFactory.createEmptyBorder(15, 100, 15, 100)); // Atur margin
         crudPanel.setBackground(backgroundColor);
 
-        ImageIcon addImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturtambah.png")));
+        // Mengatur ukuran tombol tambah
+        ImageIcon addImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/tambahBtn.png")))
+                .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
         JButton addButton = new JButton(addImage);
         addButton.setBorderPainted(false);
         addButton.setContentAreaFilled(false);
-        addButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
+        addButton.setPreferredSize(new Dimension(130, 50));
 
-        ImageIcon updateButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturubah.png")));
+        // Mengatur ukuran tombol ubah
+        ImageIcon updateButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/ubahBtn.png")))
+                .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
         JButton updateButton = new JButton(updateButtonImage);
         updateButton.setBorderPainted(false);
         updateButton.setContentAreaFilled(false);
-        updateButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
+        updateButton.setPreferredSize(new Dimension(130, 50));
 
-        ImageIcon deleteButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturhapus.png")));
+        // Mengatur ukuran tombol hapus
+        ImageIcon deleteButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/hapusBtn.png")))
+                .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
         JButton deleteButton = new JButton(deleteButtonImage);
         deleteButton.setBorderPainted(false);
         deleteButton.setContentAreaFilled(false);
-        deleteButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
+        deleteButton.setPreferredSize(new Dimension(130, 50));
 
-        ImageIcon clearButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/bersih.png")));
+        // Mengatur ukuran tombol bersih
+        ImageIcon clearButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/bersihBtn.png")))
+                .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
         JButton clearAllButton = new JButton(clearButtonImage);
         clearAllButton.setBorderPainted(false);
         clearAllButton.setContentAreaFilled(false);
-        clearAllButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
+        clearAllButton.setPreferredSize(new Dimension(130, 50));
 
         // Add search label and field
         cariLabel = new JLabel("Kode Obat");
@@ -207,7 +215,7 @@ public class Obat extends JFrame {
         searchButton.setPreferredSize(new Dimension(searchButtonImage.getIconWidth(), searchButtonImage.getIconHeight()));
 
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        searchPanel.setBorder(BorderFactory.createEmptyBorder(5, 100, 5, 0)); // Atur margin bawah
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(5, 170, 5, 0)); // Atur margin bawah
         searchPanel.setBackground(backgroundColor);
         searchPanel.add(cariLabel);
         searchPanel.add(cariField);
@@ -222,7 +230,7 @@ public class Obat extends JFrame {
         // Add the table scroll pane to the table panel
         JPanel tablePanel = new JPanel(new GridLayout(6, 0, 0, 0));
         tablePanel.setBackground(backgroundColor);
-        tablePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0)); // Atur margin bawah
+        tablePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0)); // Atur margin
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
 
         // Create a table model with columns
