@@ -7,9 +7,9 @@ import java.awt.event.MouseEvent;
 import java.util.Objects;
 
 public class Home extends JFrame {
-    private final String nama = null;
+    private final String username = null;
     private JLabel adminCRUDFrame;
-    private JLabel obat;  
+    private JLabel obat;
     private JLabel kasir;
     private JLabel hoverAdmin;
     private JLabel hoverObat;
@@ -21,6 +21,8 @@ public class Home extends JFrame {
     private JPanel featuresPanel;
     private Color backgroundColor;
 
+    private static final String MENU_ADMIN_IMAGE_PATH = "/images/menuadmin.png";
+
     public void showGUI() {
         initializeFrame();
         addFeatureButtons();
@@ -30,39 +32,34 @@ public class Home extends JFrame {
 
     private void initializeFrame() {
         frame = new JFrame("Home - Apotek Kelompok 4");
-        String hexColor = "#0D3749";
-        backgroundColor = Color.decode(hexColor);
+        backgroundColor = Color.decode("#0D3749");
 
         ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/judulmenuadmin.png")));
         JLabel label = new JLabel(image);
 
         Font labelFont = label.getFont();
-        label.setFont(new Font(labelFont.getName(), Font.PLAIN, 10)); // Ganti 18 dengan ukuran font yang diinginkan
+        label.setFont(new Font(labelFont.getName(), Font.PLAIN, 10));
 
-
-        frame.getContentPane().add(label, BorderLayout.NORTH); // judul
+        frame.getContentPane().add(label, BorderLayout.NORTH);
         frame.getContentPane().setBackground(backgroundColor);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);  // Maximize the frame
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
     }
-
 
     private void configureFrame() {
         frame.setVisible(true);
     }
 
     private void addFeatureButtons() {
-        featuresPanel = new JPanel(new GridLayout(2, 3, 5, 0)); // 2 rows, 3 columns, with 10px horizontal and vertical gap
-        String hexColor = "#0D3749";
-        backgroundColor = Color.decode(hexColor);
+        featuresPanel = new JPanel(new GridLayout(2, 3, 5, 0));
         featuresPanel.setBackground(backgroundColor);
 
         addLabel("Admin", featuresPanel);
         addLabel("Obat", featuresPanel);
         addLabel("Kasir", featuresPanel);
 
-        addButton("Menu Admin", "/images/menuadmin.png", new MenuAdminListener(), featuresPanel);
+        addButton("Menu Admin", MENU_ADMIN_IMAGE_PATH, new MenuAdminListener(), featuresPanel);
         addButton("Add Obat", "/images/addobat.png", new ObatListener(), featuresPanel);
         addButton("Kasir", "/images/kasir.png", new KasirListener(), featuresPanel);
 
@@ -96,26 +93,14 @@ public class Home extends JFrame {
         return button;
     }
 
-    private void userInterface() {
-        waktu = new Waktu();
-        waktu.setForeground(Color.WHITE);
-        waktu.setSize(200, 100);
-        waktu.setLocation(800, 551);
-        waktu.setFont(new Font("Arial", Font.BOLD, 24));
-        waktu.setHorizontalAlignment(Waktu.RIGHT);
-
-        getContentPane().add(waktu);
-        waktu.setBounds(750, 520, 300, 40);
-    }
-
     private void initializeComponents() {
-        adminCRUDFrame = createLabel("/image/menuadmin.png", 180, 180);
-        hoverAdmin = createLabel("/image/hoveradmin.png", 0, 361);
-        obat = createLabel("/image/addobat.png", 465, 180);
-        hoverObat = createLabel("/image/hoverobat.png", 0, 361);
-        kasir = createLabel("/image/kasir.png", 750, 180);
-        hoverKasir = createLabel("/image/hoverkasir.png", 0, 361);
-        logoutLabel = createLabel("/image/logout.png", 30, 530);
+        adminCRUDFrame = createLabel("", MENU_ADMIN_IMAGE_PATH, 180, 180);
+        hoverAdmin = createLabel("", "/image/hoveradmin.png", 0, 361);
+        obat = createLabel("", "/image/addobat.png", 465, 180);
+        hoverObat = createLabel("", "/image/hoverobat.png", 0, 361);
+        kasir = createLabel("", "/image/kasir.png", 750, 180);
+        hoverKasir = createLabel("", "/image/hoverkasir.png", 0, 361);
+        logoutLabel = createLabel("", "/image/logout.png", 30, 530);
 
         getContentPane().add(adminCRUDFrame);
         getContentPane().add(hoverAdmin);
@@ -124,8 +109,6 @@ public class Home extends JFrame {
         getContentPane().add(kasir);
         getContentPane().add(hoverKasir);
         getContentPane().add(logoutLabel);
-
-//        getContentPane().setBackground(new Color(8, 63, 89));
 
         menuLabel = new JLabel("");
         menuLabel.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/image/titlemenu.png"))));
@@ -136,8 +119,7 @@ public class Home extends JFrame {
 
         getContentPane().add(menuLabel);
 
-        // Create labels for admin, obat, and kasir below the picture
-        JLabel adminLabel = createLabel("Admin", "/image/menuadmin.png", 180, 361);
+        JLabel adminLabel = createLabel("Admin", MENU_ADMIN_IMAGE_PATH, 180, 361);
         JLabel obatLabel = createLabel("Obat", "/image/addobat.png", 465, 361);
         JLabel kasirLabel = createLabel("Kasir", "/image/kasir.png", 750, 361);
 
@@ -201,11 +183,11 @@ public class Home extends JFrame {
 
         adminCRUDFrame.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
-                handleMouseEnter(adminCRUDFrame, "/image/menuadmin.png", hoverAdmin, true);
+                handleMouseEnter(adminCRUDFrame, MENU_ADMIN_IMAGE_PATH, hoverAdmin, true);
             }
 
             public void mouseExited(MouseEvent e) {
-                handleMouseEnter(adminCRUDFrame, "/image/menuadmin.png", hoverAdmin, false);
+                handleMouseEnter(adminCRUDFrame, MENU_ADMIN_IMAGE_PATH, hoverAdmin, false);
             }
 
             public void mouseClicked(MouseEvent e) {
@@ -237,7 +219,7 @@ public class Home extends JFrame {
             }
 
             public void mouseClicked(MouseEvent e) {
-                openKasirGUI();  
+                openKasirGUI();
             }
         });
     }
@@ -257,7 +239,7 @@ public class Home extends JFrame {
         new Obat();
     }
 
-    private void openKasirGUI() {  
+    private void openKasirGUI() {
 //        new Kasir();
     }
 
