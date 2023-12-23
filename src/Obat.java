@@ -31,6 +31,7 @@ public class Obat extends JFrame {
     private JTextField cariField;
     private DefaultTableModel tableModel;
     private JTable obatTable;
+    private JButton backButton;
     private JScrollPane tableScrollPane;
     private Color backgroundColor;
     private String hexColor = "#0D3749";
@@ -57,15 +58,30 @@ public class Obat extends JFrame {
         backgroundColor = Color.decode(hexColor);
         frame.getContentPane().setBackground(backgroundColor);
 
-        JPanel titlePanel = new JPanel(new GridLayout(1, 1, 5, 5));
+        // Judul Panel menggunakan BorderLayout
+        JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(backgroundColor);
         titlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0)); // Atur marg
 
+        // Tombol Kembali
+        ImageIcon backImages = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/backbutton.png")));
+        backButton = new JButton(backImages);
+        backButton.setBorderPainted(false);
+        backButton.setFocusPainted(false);
+        backButton.setBorder(new EmptyBorder(0, 0, 0, 0));
+        backButton.setContentAreaFilled(false);
+        backButton.setPreferredSize(new Dimension(backImages.getIconWidth(), backImages.getIconHeight()));
+
+        // Letakkan tombol kembali di sebelah kiri
+        titlePanel.add(backButton, BorderLayout.WEST);
+
+        // Label Judul
         ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/menucariobat.png")));
         JLabel titleLabel = new JLabel(image);
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        titlePanel.add(titleLabel);
-
+        // Letakkan judul di tengah
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
 
         frame.getContentPane().add(titlePanel, BorderLayout.NORTH); // judul
         frame.getContentPane().setBackground(backgroundColor);
@@ -73,6 +89,7 @@ public class Obat extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
     }
+
 
     private void configureFrame() {
         frame.setVisible(true);
@@ -89,7 +106,7 @@ public class Obat extends JFrame {
 
         Font labelFont = new Font("Rockwell", Font.BOLD, 18);
 
-        JPanel inputPanel = new JPanel(new GridLayout(3, 4, 10, 10));
+        JPanel inputPanel = new JPanel(new GridLayout(3, 7, 10, 10));
         inputPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 5, 0)); // Atur margin bawah
         inputPanel.setBackground(backgroundColor);
 
@@ -143,13 +160,13 @@ public class Obat extends JFrame {
         inputPanel.add(expDateLabel);
         inputPanel.add(expDateField);
 
-        JPanel twoPanel = new JPanel(new GridLayout(2, 3, 0, 0));
+        JPanel twoPanel = new JPanel(new GridLayout(1, 7, 0, 0));
         twoPanel.setBackground(backgroundColor);
         twoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0)); // Atur margin bawah
 
-        JPanel crudPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        crudPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20)); // Atur margin bawah
-        crudPanel.setBackground(Color.red);
+        JPanel crudPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        crudPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 100)); // Atur margin bawah
+        crudPanel.setBackground(backgroundColor);
 
         ImageIcon addImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/fiturtambah.png")));
         JButton addButton = new JButton(addImage);
@@ -176,7 +193,7 @@ public class Obat extends JFrame {
         clearAllButton.setPreferredSize(new Dimension(addImage.getIconWidth(), addImage.getIconHeight()));
 
         // Add search label and field
-        cariLabel = new JLabel("Cari");
+        cariLabel = new JLabel("Kode Obat");
         cariLabel.setForeground(Color.WHITE);
         cariLabel.setFont(labelFont);
 
@@ -189,9 +206,9 @@ public class Obat extends JFrame {
         searchButton.setContentAreaFilled(false);
         searchButton.setPreferredSize(new Dimension(searchButtonImage.getIconWidth(), searchButtonImage.getIconHeight()));
 
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        searchPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10)); // Atur margin bawah
-        searchPanel.setBackground(Color.green);
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(5, 100, 5, 0)); // Atur margin bawah
+        searchPanel.setBackground(backgroundColor);
         searchPanel.add(cariLabel);
         searchPanel.add(cariField);
         searchPanel.add(searchButton);
@@ -200,6 +217,7 @@ public class Obat extends JFrame {
         crudPanel.add(updateButton);
         crudPanel.add(deleteButton);
         crudPanel.add(clearAllButton);
+        crudPanel.add(searchPanel);
 
         // Add the table scroll pane to the table panel
         JPanel tablePanel = new JPanel(new GridLayout(6, 0, 0, 0));
@@ -220,10 +238,10 @@ public class Obat extends JFrame {
         tableScrollPane.add(Box.createVerticalStrut(500));
         tableScrollPane.setBackground(backgroundColor);
         tableScrollPane.setBorder(new EmptyBorder(5, 20, 20, 20));
-
         tablePanel.add(tableScrollPane);
+
         twoPanel.add(crudPanel);
-        twoPanel.add(searchPanel);
+//        twoPanel.add(searchPanel);
 
         firstPanel.add(inputPanel);
         firstPanel.add(twoPanel);
