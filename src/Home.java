@@ -55,13 +55,13 @@ public class Home extends JFrame {
         featuresPanel = new JPanel(new GridLayout(2, 3, 5, 0));
         featuresPanel.setBackground(backgroundColor);
 
-        addLabel("Admin", featuresPanel);
-        addLabel("Obat", featuresPanel);
-        addLabel("Kasir", featuresPanel);
-
         addButton("Menu Admin", MENU_ADMIN_IMAGE_PATH, new MenuAdminListener(), featuresPanel);
         addButton("Add Obat", "/images/addobat.png", new ObatListener(), featuresPanel);
         addButton("Kasir", "/images/kasir.png", new KasirListener(), featuresPanel);
+
+        addLabel("Admin", featuresPanel);
+        addLabel("Obat", featuresPanel);
+        addLabel("Kasir", featuresPanel);
 
         JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         logoutPanel.setBackground(backgroundColor);
@@ -75,6 +75,12 @@ public class Home extends JFrame {
         JLabel label = new JLabel(labelText);
         label.setForeground(Color.WHITE);
         label.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(label);
+
+        Font originalFont = label.getFont();
+        Font newFont = new Font(originalFont.getName(), Font.BOLD, 20); // Sesuaikan ukuran font yang diinginkan
+        label.setFont(newFont);
+
         panel.add(label);
     }
 
