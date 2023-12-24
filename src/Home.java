@@ -101,20 +101,20 @@ public class Home extends JFrame {
 
     private void initializeComponents() {
         adminCRUDFrame = createLabel("", MENU_ADMIN_IMAGE_PATH, 180, 180);
-        hoverAdmin = createLabel("", "/image/hoveradmin.png", 0, 361);
+        hoverAdmin = createLabel("", "/image/hoveradmin.png", 0, 300);
         obat = createLabel("", "/image/addobat.png", 465, 180);
-        hoverObat = createLabel("", "/image/hoverobat.png", 0, 361);
-        kasir = createLabel("", "/image/kasir.png", 750, 180);
-        hoverKasir = createLabel("", "/image/hoverkasir.png", 0, 361);
-        logoutLabel = createLabel("", "/image/logout.png", 30, 530);
+        hoverObat = createLabel("", "/image/hoverobat.png", 0, 300);
+       kasir = createLabel("", "/image/kasir.png", 750, 180);
+        hoverKasir = createLabel("", "/image/hoverkasir.png", 0, 300);
+       logoutLabel = createLabel("", "/image/logout.png", 30, 530);
 
-        getContentPane().add(adminCRUDFrame);
-        getContentPane().add(hoverAdmin);
-        getContentPane().add(obat);
-        getContentPane().add(hoverObat);
-        getContentPane().add(kasir);
-        getContentPane().add(hoverKasir);
-        getContentPane().add(logoutLabel);
+       getContentPane().add(adminCRUDFrame);
+       getContentPane().add(hoverAdmin);
+       getContentPane().add(obat);
+       getContentPane().add(hoverObat);
+       getContentPane().add(kasir);
+       getContentPane().add(hoverKasir);
+      getContentPane().add(logoutLabel);
 
         menuLabel = new JLabel("");
         menuLabel.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/image/titlemenu.png"))));
@@ -125,9 +125,15 @@ public class Home extends JFrame {
 
         getContentPane().add(menuLabel);
 
-        JLabel adminLabel = createLabel("Admin", MENU_ADMIN_IMAGE_PATH, 180, 361);
-        JLabel obatLabel = createLabel("Obat", "/image/addobat.png", 465, 361);
-        JLabel kasirLabel = createLabel("Kasir", "/image/kasir.png", 750, 361);
+        JLabel adminLabel = createLabel("Admin", MENU_ADMIN_IMAGE_PATH, 180, 520);
+        adminLabel.setBounds(180, 520, 100, 30);
+
+        JLabel obatLabel = createLabel("Obat", "/image/addobat.png", 465, 520);
+        obatLabel.setBounds(465, 520, 100, 30);
+
+        JLabel kasirLabel = createLabel("Kasir", "/image/kasir.png", 750, 520);
+        kasirLabel.setBounds(750, 520, 100, 30);
+
 
         getContentPane().add(adminLabel);
         getContentPane().add(obatLabel);
