@@ -223,14 +223,14 @@ public class Obat extends JFrame {
         clearAllButton.setContentAreaFilled(false);
         clearAllButton.setPreferredSize(new Dimension(130, 50));
 
-        // Add search label and field
+        // Search label and field
         cariLabel = new JLabel("Kode Obat");
         cariLabel.setForeground(Color.WHITE);
         cariLabel.setFont(labelFont);
 
         cariField = new JTextField(10);
 
-        // Add search button
+        // Search button
         ImageIcon searchButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/kcari.png")));
         searchButton = new JButton(searchButtonImage);
         searchButton.setBorderPainted(false);
@@ -271,8 +271,7 @@ public class Obat extends JFrame {
         tableScrollPane.setBorder(new EmptyBorder(5, 20, 20, 20));
         tablePanel.add(tableScrollPane);
 
-        twoPanel.add(crudPanel);
-//        twoPanel.add(searchPanel);
+        twoPanel.add(crudPanel);;
 
         firstPanel.add(inputPanel);
         firstPanel.add(twoPanel);
