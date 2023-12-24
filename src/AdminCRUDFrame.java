@@ -53,9 +53,7 @@ public class AdminCRUDFrame extends JFrame {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Home home = new Home();
-                home.showGUI();
-                dispose();
+                closeFrame();
             }
         });
 
@@ -202,8 +200,6 @@ public class AdminCRUDFrame extends JFrame {
 
         tableScrollPane.setBorder(new EmptyBorder(paddingSize, paddingSize, paddingSize, paddingSize));
 
-
-
         // Action listeners for buttons
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -246,6 +242,12 @@ public class AdminCRUDFrame extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH); 
+    }
+
+    private void closeFrame() {
+        dispose(); // Tutup frame
+        Home home = new Home();
+        home.showGUI(); // Tampilkan frame Home
     }
 
     private void addAdminToDatabase() {

@@ -3,6 +3,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.*;
@@ -11,6 +13,11 @@ import java.util.Vector;
 
 public class Obat extends JFrame {
     private JFrame frame;
+    private JButton addButton;
+    private JButton deleteButton;
+    private JButton updateButton;
+    private JButton clearAllButton;
+    private JButton searchButton;
     private JLabel tambahLabel;
     private JLabel hapusLabel;
     private JLabel ubahLabel;
@@ -41,17 +48,18 @@ public class Obat extends JFrame {
         initializeFrame();
         configureFrame();
         initializeComponents();
-//        initializeDatabaseConnection();
-//        tampilTabel();
+        initializeDatabaseConnection();
+        tampilkanDataDariDatabase();
+        addActionListeners();
     }
 
-//    private void initializeDatabaseConnection() {
-//        try {
-//            connection = KoneksiDB.getKoneksi();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private void initializeDatabaseConnection() {
+        try {
+            connection = KoneksiDB.getKoneksi();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void initializeFrame() {
         frame = new JFrame("Home - Apotek Kelompok 4");
@@ -72,6 +80,14 @@ public class Obat extends JFrame {
         backButton.setContentAreaFilled(false);
         backButton.setPreferredSize(new Dimension(backImages.getIconWidth(), backImages.getIconHeight()));
 
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Panggil method untuk menutup frame
+                closeFrame();
+            }
+        });
+
         // Letakkan tombol kembali di sebelah kiri
         titlePanel.add(backButton, BorderLayout.WEST);
 
@@ -88,6 +104,13 @@ public class Obat extends JFrame {
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
+    }
+
+    // Tambahkan method untuk menutup frame Obat
+    private void closeFrame() {
+        frame.dispose(); // Tutup frame Obat
+        Home home = new Home();
+        home.showGUI(); // Tampilkan frame Home
     }
 
 
@@ -171,7 +194,7 @@ public class Obat extends JFrame {
         // Mengatur ukuran tombol tambah
         ImageIcon addImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/tambahBtn.png")))
                 .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
-        JButton addButton = new JButton(addImage);
+        addButton = new JButton(addImage);
         addButton.setBorderPainted(false);
         addButton.setContentAreaFilled(false);
         addButton.setPreferredSize(new Dimension(130, 50));
@@ -179,7 +202,7 @@ public class Obat extends JFrame {
         // Mengatur ukuran tombol ubah
         ImageIcon updateButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/ubahBtn.png")))
                 .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
-        JButton updateButton = new JButton(updateButtonImage);
+        updateButton = new JButton(updateButtonImage);
         updateButton.setBorderPainted(false);
         updateButton.setContentAreaFilled(false);
         updateButton.setPreferredSize(new Dimension(130, 50));
@@ -187,7 +210,7 @@ public class Obat extends JFrame {
         // Mengatur ukuran tombol hapus
         ImageIcon deleteButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/hapusBtn.png")))
                 .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
-        JButton deleteButton = new JButton(deleteButtonImage);
+        deleteButton = new JButton(deleteButtonImage);
         deleteButton.setBorderPainted(false);
         deleteButton.setContentAreaFilled(false);
         deleteButton.setPreferredSize(new Dimension(130, 50));
@@ -195,21 +218,21 @@ public class Obat extends JFrame {
         // Mengatur ukuran tombol bersih
         ImageIcon clearButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/bersihBtn.png")))
                 .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
-        JButton clearAllButton = new JButton(clearButtonImage);
+        clearAllButton = new JButton(clearButtonImage);
         clearAllButton.setBorderPainted(false);
         clearAllButton.setContentAreaFilled(false);
         clearAllButton.setPreferredSize(new Dimension(130, 50));
 
-        // Add search label and field
+        // Search label and field
         cariLabel = new JLabel("Kode Obat");
         cariLabel.setForeground(Color.WHITE);
         cariLabel.setFont(labelFont);
 
         cariField = new JTextField(10);
 
-        // Add search button
+        // Search button
         ImageIcon searchButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/kcari.png")));
-        JButton searchButton = new JButton(searchButtonImage);
+        searchButton = new JButton(searchButtonImage);
         searchButton.setBorderPainted(false);
         searchButton.setContentAreaFilled(false);
         searchButton.setPreferredSize(new Dimension(searchButtonImage.getIconWidth(), searchButtonImage.getIconHeight()));
@@ -248,8 +271,7 @@ public class Obat extends JFrame {
         tableScrollPane.setBorder(new EmptyBorder(5, 20, 20, 20));
         tablePanel.add(tableScrollPane);
 
-        twoPanel.add(crudPanel);
-//        twoPanel.add(searchPanel);
+        twoPanel.add(crudPanel);;
 
         firstPanel.add(inputPanel);
         firstPanel.add(twoPanel);
@@ -258,31 +280,232 @@ public class Obat extends JFrame {
         frame.getContentPane().add(secondPanel, BorderLayout.SOUTH);
     }
 
-    //    private void tampilTabel() {
-//        try {
-//            DefaultTableModel model = (DefaultTableModel) obatTable.getModel();
-//            model.setRowCount(0);
-//
-//            Statement statement = connection.createStatement();
-//            ResultSet resultSet = statement.executeQuery("SELECT * FROM obat");
-//
-//            while (resultSet.next()) {
-//                Vector<Object> rowData = new Vector<>();
-//                rowData.add(resultSet.getString("ID_Obat"));
-//                rowData.add(resultSet.getString("NamaObat"));
-//                rowData.add(resultSet.getString("Harga"));
-//                rowData.add(resultSet.getString("Stok"));
-//                rowData.add(resultSet.getString("Keterangan"));
-//                rowData.add(resultSet.getString("Exp_Date"));
-//
-//                model.addRow(rowData);
-//            }
-//
-//            statement.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private void addActionListeners() {
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tambahObatKeDatabase();
+            }
+        });
+
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateObatDiDatabase();
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hapusObatDariDatabase();
+            }
+        });
+
+        clearAllButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                bersihkanForm();
+            }
+        });
+
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cariObat();
+            }
+        });
+
+        obatTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    handleTableClick();
+                }
+            }
+        });
+    }
+
+    private void handleTableClick() {
+        int row = obatTable.getSelectedRow();
+        if (row != -1) {
+            kodeObatField.setText((String) obatTable.getValueAt(row, 0));
+            namaObatField.setText((String) obatTable.getValueAt(row, 1));
+            hargaField.setText((String) obatTable.getValueAt(row, 2));
+            stokField.setText((String) obatTable.getValueAt(row, 3));
+            keteranganField.setText((String) obatTable.getValueAt(row, 4));
+            expDateField.setText((String) obatTable.getValueAt(row, 5));
+        }
+    }
+
+    private void tampilkanDataDariDatabase() {
+        try (Connection connection = KoneksiDB.getKoneksi()) {
+            String query = "SELECT Kode_Obat, Nama_Obat, Harga_Obat, Stok, Ket_Obat, Exp_Date FROM obat";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+                 ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                // Bersihkan data di tabel sebelum menambahkan data baru
+                tableModel.setRowCount(0);
+
+                // Tambahkan baris data dari ResultSet ke tabel
+                while (resultSet.next()) {
+                    Object[] rowData = {
+                            resultSet.getString("Kode_Obat"),
+                            resultSet.getString("Nama_Obat"),
+                            resultSet.getString("Harga_Obat"),
+                            resultSet.getString("Stok"),
+                            resultSet.getString("Ket_Obat"),
+                            resultSet.getString("Exp_Date")
+                    };
+                    tableModel.addRow(rowData);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error fetching data from the database.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void tambahObatKeDatabase() {
+        // Implementasi untuk tambah obat ke database
+        // Ambil nilai dari field
+        String kodeObat = kodeObatField.getText();
+        String namaObat = namaObatField.getText();
+        String harga = hargaField.getText();
+        String stok = stokField.getText();
+        String keterangan = keteranganField.getText();
+        String expDate = expDateField.getText();
+
+        // Lakukan validasi (pastikan tidak kosong)
+        if (!kodeObat.isEmpty() && !namaObat.isEmpty() && !harga.isEmpty() && !stok.isEmpty() && !keterangan.isEmpty() && !expDate.isEmpty()) {
+            // Lakukan operasi tambah ke database
+            try (Connection connection = KoneksiDB.getKoneksi()) {
+                String query = "INSERT INTO obat (Kode_Obat, Nama_Obat, Harga_Obat, Stok, Ket_Obat, Exp_Date) VALUES (?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setString(1, kodeObat);
+                    preparedStatement.setString(2, namaObat);
+                    preparedStatement.setString(3, harga);
+                    preparedStatement.setString(4, stok);
+                    preparedStatement.setString(5, keterangan);
+                    preparedStatement.setString(6, expDate);
+
+                    int affectedRows = preparedStatement.executeUpdate();
+                    if (affectedRows > 0) {
+                        // Jika penambahan berhasil, tambahkan juga ke tabel di GUI
+                        Object[] rowData = {kodeObat, namaObat, harga, stok, keterangan, expDate};
+                        tableModel.addRow(rowData);
+                        bersihkanForm();
+                        JOptionPane.showMessageDialog(Obat.this, "Data Berhasil Ditambahkan!", "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error adding obat to the database.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "All fields must be filled.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void updateObatDiDatabase() {
+        // Implementasi untuk update obat di database
+        int row = obatTable.getSelectedRow();
+        if (row != -1) {
+            // Ambil nilai dari field
+            String kodeObat = kodeObatField.getText();
+            String namaObat = namaObatField.getText();
+            String harga = hargaField.getText();
+            String stok = stokField.getText();
+            String keterangan = keteranganField.getText();
+            String expDate = expDateField.getText();
+
+            // Lakukan validasi (pastikan tidak kosong)
+            if (!kodeObat.isEmpty() && !namaObat.isEmpty() && !harga.isEmpty() && !stok.isEmpty() && !keterangan.isEmpty() && !expDate.isEmpty()) {
+                // Lakukan operasi update ke database
+                try (Connection connection = KoneksiDB.getKoneksi()) {
+                    String query = "UPDATE obat SET Nama_Obat=?, Harga=?, Stok=?, Keterangan=?, Exp_Date=? WHERE Kode_Obat=?";
+                    try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                        preparedStatement.setString(1, namaObat);
+                        preparedStatement.setString(2, harga);
+                        preparedStatement.setString(3, stok);
+                        preparedStatement.setString(4, keterangan);
+                        preparedStatement.setString(5, expDate);
+                        preparedStatement.setString(6, kodeObat);
+
+                        int affectedRows = preparedStatement.executeUpdate();
+                        if (affectedRows > 0) {
+                            // Jika update berhasil, update juga di tabel di GUI
+                            obatTable.setValueAt(namaObat, row, 1);
+                            obatTable.setValueAt(harga, row, 2);
+                            obatTable.setValueAt(stok, row, 3);
+                            obatTable.setValueAt(keterangan, row, 4);
+                            obatTable.setValueAt(expDate, row, 5);
+                            bersihkanForm();
+                            JOptionPane.showMessageDialog(Obat.this, "Data Berhasil Diubah!", "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Error updating obat in the database.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "All fields must be filled.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Select a row to update.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void hapusObatDariDatabase() {
+        // Implementasi untuk hapus obat dari database
+        int row = obatTable.getSelectedRow();
+        if (row != -1) {
+            // Ambil nilai dari field
+            String kodeObat = (String) obatTable.getValueAt(row, 0);
+
+            // Lakukan operasi hapus ke database
+            try (Connection connection = KoneksiDB.getKoneksi()) {
+                String query = "DELETE FROM obat WHERE Kode_Obat=?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setString(1, kodeObat);
+
+                    int affectedRows = preparedStatement.executeUpdate();
+                    if (affectedRows > 0) {
+                        // Jika hapus berhasil, hapus juga dari tabel di GUI
+                        tableModel.removeRow(row);
+                        bersihkanForm();
+                        JOptionPane.showMessageDialog(Obat.this, "Data Berhasil Dihapus!", "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error deleting obat from the database.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Select a row to delete.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void bersihkanForm() {
+        // Bersihkan nilai di field
+        kodeObatField.setText("");
+        namaObatField.setText("");
+        hargaField.setText("");
+        stokField.setText("");
+        keteranganField.setText("");
+        expDateField.setText("");
+    }
+
+    private void cariObat() {
+        // Implementasi untuk mencari obat dari database
+        String kodeObat = cariField.getText();
+        if (!kodeObat.isEmpty()) {
+            TableRowSorter<DefaultTableModel> sorter = (TableRowSorter<DefaultTableModel>) obatTable.getRowSorter();
+            sorter.setRowFilter(RowFilter.regexFilter(kodeObat, 0));
+        } else {
+            JOptionPane.showMessageDialog(this, "Enter a Kode Obat to search.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
