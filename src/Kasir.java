@@ -7,12 +7,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.*;
 import java.util.Objects;
-import java.util.Vector;
 
-public class Obat extends JFrame {
+public class Kasir extends JFrame {
     private JFrame frame;
-    private JLabel bersihLabel;
-    private JLabel cariLabel;
     private JLabel kodeObatLabel;
     private JTextField kodeObatField;
     private JLabel merkLabel;
@@ -41,17 +38,16 @@ public class Obat extends JFrame {
         initializeFrame();
         configureFrame();
         initializeComponents();
-//        initializeDatabaseConnection();
-//        tampilTabel();
+        initializeDatabaseConnection();
     }
 
-//    private void initializeDatabaseConnection() {
-//        try {
-//            connection = KoneksiDB.getKoneksi();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private void initializeDatabaseConnection() {
+        try {
+            connection = KoneksiDB.getKoneksi();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void initializeFrame() {
         frame = new JFrame("Kasir - Apotek Kelompok 4");
@@ -64,7 +60,7 @@ public class Obat extends JFrame {
         titlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0)); // Atur margin
 
         // Tombol Kembali
-        ImageIcon backImages = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/backbutton.png")));
+        ImageIcon backImages = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/backbutton.png")));
         backButton = new JButton(backImages);
         backButton.setBorderPainted(false);
         backButton.setFocusPainted(false);
@@ -76,7 +72,7 @@ public class Obat extends JFrame {
         titlePanel.add(backButton, BorderLayout.WEST);
 
         // Label Judul
-        ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/menukasir.png")));
+        ImageIcon image = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/menukasir.png")));
         JLabel titleLabel = new JLabel(image);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -90,32 +86,45 @@ public class Obat extends JFrame {
         frame.setResizable(true);
     }
 
-
     private void configureFrame() {
         frame.setVisible(true);
     }
 
     private void initializeComponents() {
-        JPanel firstPanel = new JPanel(new GridLayout(2, 1, 0, 0));
-        firstPanel.setBackground(backgroundColor);
+        JPanel firstPanel = new JPanel(new BorderLayout());
+        firstPanel.setBackground(Color.green);
         firstPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0)); // Atur margin
 
-        JPanel secondPanel = new JPanel(new GridLayout(0, 1, 0, 0));
-        secondPanel.setBackground(backgroundColor);
+        JPanel secondPanel = new JPanel(new GridLayout(1, 1, 0, 0));
+        secondPanel.setBackground(Color.red);
         secondPanel.setBorder(BorderFactory.createEmptyBorder(1, 0, 5, 0)); // Atur margin
 
         Font labelFont = new Font("Rockwell", Font.BOLD, 18);
 
-        JPanel inputPanel = new JPanel(new GridLayout(3, 7, 10, 10));
-        inputPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 5, 0)); // Atur margin
-        inputPanel.setBackground(backgroundColor);
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 10, 10));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0)); // Atur margin
+        searchPanel.setBackground(backgroundColor);
 
+        // Add search label and field
         kodeObatLabel = new JLabel("Kode Obat");
         kodeObatLabel.setForeground(Color.WHITE);
         kodeObatLabel.setFont(labelFont);
 
-        kodeObatField = new JTextField(10);
-        
+        kodeObatField = new JTextField(5);
+
+        ImageIcon searchButtonImage = new ImageIcon(getClass().getResource("/images/kcari.png"));
+        JButton searchButton = new JButton(searchButtonImage);
+        searchButton.setBorderPainted(false);
+        searchButton.setContentAreaFilled(false);
+
+        searchPanel.add(kodeObatLabel);
+        searchPanel.add(kodeObatField);
+        searchPanel.add(searchButton);
+
+        JPanel inputPanel = new JPanel(new GridLayout(4, 2, 0, 0)); // Mengubah ke 3 kolom agar lebih mudah dilihat
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0)); // Atur margin
+        inputPanel.setBackground(Color.blue);
+
         merkLabel = new JLabel("Merk");
         merkLabel.setForeground(Color.WHITE);
         merkLabel.setFont(labelFont);
@@ -140,21 +149,6 @@ public class Obat extends JFrame {
 
         jumlahField = new JTextField(10);
 
-        totalLabel = new JLabel("total");
-        totalLabel.setForeground(Color.WHITE);
-        totalLabel.setFont(labelFont);
-
-        totalField = new JTextField(10);
-
-        kembalianLabel = new JLabel("kembalian");
-        kembalianLabel.setForeground(Color.WHITE);
-        kembalianLabel.setFont(labelFont);
-
-        kembalianField = new JTextField(10);
-        cariField = new JTextField();
-
-        inputPanel.add(kodeObatLabel);
-        inputPanel.add(kodeObatField);
         inputPanel.add(merkLabel);
         inputPanel.add(merkField);
         inputPanel.add(hargaLabel);
@@ -163,140 +157,21 @@ public class Obat extends JFrame {
         inputPanel.add(jumlahitemField);
         inputPanel.add(jumlahLabel);
         inputPanel.add(jumlahField);
-        inputPanel.add(totalLabel);
-        inputPanel.add(totalField);
-        inputPanel.add(tunaiLabel);
-        inputPanel.add(tunaiField);
-        inputPanel.add(kembalianLabel);
-        inputPanel.add(kembalianField);
-        JPanel twoPanel = new JPanel(new GridLayout(1, 7, 0, 0));
-        twoPanel.setBackground(backgroundColor);
-        twoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0)); // Atur margin
 
-        JPanel crudPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        crudPanel.setBorder(BorderFactory.createEmptyBorder(15, 100, 15, 100)); // Atur margin
-        crudPanel.setBackground(backgroundColor);
+        //inputPanel.add(totalLabel);
+//        inputPanel.add(totalField);
+//        inputPanel.add(tunaiLabel);
+//        inputPanel.add(tunaiField);
+//        inputPanel.add(kembalianLabel);
+//        inputPanel.add(kembalianField);
 
-        // Mengatur ukuran tombol tambah
-        ImageIcon addImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/tambahBtn.png")))
-                .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
-        JButton addButton = new JButton(addImage);
-        addButton.setBorderPainted(false);
-        addButton.setContentAreaFilled(false);
-        addButton.setPreferredSize(new Dimension(130, 50));
-
-        // Mengatur ukuran tombol ubah
-        ImageIcon updateButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/ubahBtn.png")))
-                .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
-        JButton updateButton = new JButton(updateButtonImage);
-        updateButton.setBorderPainted(false);
-        updateButton.setContentAreaFilled(false);
-        updateButton.setPreferredSize(new Dimension(130, 50));
-
-        // Mengatur ukuran tombol hapus
-        ImageIcon deleteButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/hapusBtn.png")))
-                .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
-        JButton deleteButton = new JButton(deleteButtonImage);
-        deleteButton.setBorderPainted(false);
-        deleteButton.setContentAreaFilled(false);
-        deleteButton.setPreferredSize(new Dimension(130, 50));
-
-        // Mengatur ukuran tombol bersih
-        ImageIcon clearButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/bersihBtn.png")))
-                .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
-        JButton clearAllButton = new JButton(clearButtonImage);
-        clearAllButton.setBorderPainted(false);
-        clearAllButton.setContentAreaFilled(false);
-        clearAllButton.setPreferredSize(new Dimension(130, 50));
-
-        // Add search label and field
-        cariLabel = new JLabel("Kode Obat");
-        cariLabel.setForeground(Color.WHITE);
-        cariLabel.setFont(labelFont);
-
-        cariField = new JTextField(10);
-
-        // Add search button
-        ImageIcon searchButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/kcari.png")));
-        JButton searchButton = new JButton(searchButtonImage);
-        searchButton.setBorderPainted(false);
-        searchButton.setContentAreaFilled(false);
-        searchButton.setPreferredSize(new Dimension(searchButtonImage.getIconWidth(), searchButtonImage.getIconHeight()));
-
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        searchPanel.setBorder(BorderFactory.createEmptyBorder(5, 170, 5, 0)); // Atur margin bawah
-        searchPanel.setBackground(backgroundColor);
-        searchPanel.add(cariLabel);
-        searchPanel.add(cariField);
-        searchPanel.add(searchButton);
-
-        crudPanel.add(addButton);
-        crudPanel.add(updateButton);
-        crudPanel.add(deleteButton);
-        crudPanel.add(clearAllButton);
-        crudPanel.add(searchPanel);
-
-        // Add the table scroll pane to the table panel
-        JPanel tablePanel = new JPanel(new GridLayout(6, 0, 0, 0));
-        tablePanel.setBackground(backgroundColor);
-        tablePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0)); // Atur margin
-        tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
-
-        // Create a table model with columns
-        String[] columns = {"Kode Obat", "Nama Obat", "Harga", "Stok", "Keterangan", "Exp_Date"};
-        tableModel = new DefaultTableModel(columns, 0);
-        obatTable = new JTable(tableModel);
-
-        // Set up sorting for the table
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
-        obatTable.setRowSorter(sorter);
-
-        JScrollPane tableScrollPane = new JScrollPane(obatTable);
-        tableScrollPane.add(Box.createVerticalStrut(500));
-        tableScrollPane.setBackground(backgroundColor);
-        tableScrollPane.setBorder(new EmptyBorder(5, 20, 20, 20));
-        tablePanel.add(tableScrollPane);
-
-        twoPanel.add(crudPanel);
-//        twoPanel.add(searchPanel);
-
-        firstPanel.add(inputPanel);
-        firstPanel.add(twoPanel);
-        secondPanel.add(tablePanel);
+        firstPanel.add(searchPanel, BorderLayout.NORTH);
+        firstPanel.add(inputPanel, BorderLayout.CENTER);
         frame.getContentPane().add(firstPanel, BorderLayout.CENTER);
         frame.getContentPane().add(secondPanel, BorderLayout.SOUTH);
     }
 
-    //    private void tampilTabel() {
-//        try {
-//            DefaultTableModel model = (DefaultTableModel) obatTable.getModel();
-//            model.setRowCount(0);
-//
-//            Statement statement = connection.createStatement();
-//            ResultSet resultSet = statement.executeQuery("SELECT * FROM obat");
-//
-//            while (resultSet.next()) {
-//                Vector<Object> rowData = new Vector<>();
-//                rowData.add(resultSet.getString("ID_Obat"));
-//                rowData.add(resultSet.getString("NamaObat"));
-//                rowData.add(resultSet.getString("Harga"));
-//                rowData.add(resultSet.getString("Stok"));
-//                rowData.add(resultSet.getString("Keterangan"));
-//                rowData.add(resultSet.getString("Exp_Date"));
-//
-//                model.addRow(rowData);
-//            }
-//
-//            statement.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new Kasir();
-            }
-        });
+        SwingUtilities.invokeLater(() -> new Kasir());
     }
 }
