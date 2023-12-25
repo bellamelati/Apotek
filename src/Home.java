@@ -42,42 +42,45 @@ public class Home extends JFrame {
     }
 
     private void addFeatureButtons() {
-        featuresPanel = new JPanel(new GridLayout(2, 3, 5, 0));
+        featuresPanel = new JPanel(null); // Menggunakan layout null
         featuresPanel.setBackground(backgroundColor);
 
-        addButton("Menu Admin", MENU_ADMIN_IMAGE_PATH, new MenuAdminListener(), featuresPanel);
-        addButton("Add Obat", "/images/addobat.png", new ObatListener(), featuresPanel);
-        addButton("Kasir", "/images/kasir.png", new KasirListener(), featuresPanel);
+        addButton("Menu Admin", MENU_ADMIN_IMAGE_PATH, new MenuAdminListener(), featuresPanel, 323, 190);
+        addButton("Add Obat", "/images/addobat.png", new ObatListener(), featuresPanel, 646, 190);
+        addButton("Kasir", "/images/kasir.png", new KasirListener(), featuresPanel, 969, 190);
 
-        //addLabel("Admin", featuresPanel);
-        //addLabel("Obat", featuresPanel);
-        //addLabel("Kasir", featuresPanel);
+        addLabel("Admin", featuresPanel, 330, 400);
+        addLabel("Obat", featuresPanel, 655, 400);
+        addLabel("Kasir", featuresPanel, 980, 400);
 
         JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         logoutPanel.setBackground(backgroundColor);
-        addButton("Logout", "/images/logout.png", new LogoutListener(), logoutPanel);
+        addButton("Logout", "/images/logout.png", new LogoutListener(), logoutPanel, 30, 530);
 
         frame.getContentPane().add(featuresPanel, BorderLayout.CENTER);
         frame.getContentPane().add(logoutPanel, BorderLayout.SOUTH);
     }
 
-    private void addLabel(String labelText, JPanel panel) {
+    private void addLabel(String labelText, JPanel panel, int x, int y) {
         JLabel label = new JLabel(labelText);
         label.setForeground(Color.WHITE);
         label.setHorizontalAlignment(SwingConstants.CENTER);
-        panel.add(label);
 
         Font originalFont = label.getFont();
         Font newFont = new Font(originalFont.getName(), Font.BOLD, 30); // Sesuaikan ukuran font yang diinginkan
         label.setFont(newFont);
 
+
+        label.setBounds(x, y, 150, 30);
+
         panel.add(label);
     }
 
-    private void addButton(String label, String imagePath, ActionListener listener, JPanel panel) {
+    private void addButton(String label, String imagePath, ActionListener listener, JPanel panel, int x, int y) {
         JButton button = createFeatureButton(imagePath);
         button.addActionListener(listener);
         panel.add(button);
+        button.setBounds(x, y, 170, 170);
     }
 
     private JButton createFeatureButton(String imagePath) {
