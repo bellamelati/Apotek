@@ -2,21 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Objects;
 
+
 public class Home extends JFrame {
-    private final String username = null;
-    private JLabel adminCRUDFrame;
-    private JLabel obat;
-    private JLabel kasir;
-    private JLabel hoverAdmin;
-    private JLabel hoverObat;
-    private JLabel hoverKasir;
-    private JLabel logoutLabel;
-    private JLabel menuLabel;
-    private Waktu waktu;
+
     private JFrame frame;
     private JPanel featuresPanel;
     private Color backgroundColor;
@@ -59,9 +49,9 @@ public class Home extends JFrame {
         addButton("Add Obat", "/images/addobat.png", new ObatListener(), featuresPanel);
         addButton("Kasir", "/images/kasir.png", new KasirListener(), featuresPanel);
 
-        addLabel("Admin", featuresPanel);
-        addLabel("Obat", featuresPanel);
-        addLabel("Kasir", featuresPanel);
+        //addLabel("Admin", featuresPanel);
+        //addLabel("Obat", featuresPanel);
+        //addLabel("Kasir", featuresPanel);
 
         JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         logoutPanel.setBackground(backgroundColor);
@@ -78,7 +68,7 @@ public class Home extends JFrame {
         panel.add(label);
 
         Font originalFont = label.getFont();
-        Font newFont = new Font(originalFont.getName(), Font.BOLD, 20); // Sesuaikan ukuran font yang diinginkan
+        Font newFont = new Font(originalFont.getName(), Font.BOLD, 30); // Sesuaikan ukuran font yang diinginkan
         label.setFont(newFont);
 
         panel.add(label);
@@ -100,45 +90,6 @@ public class Home extends JFrame {
     }
 
     private void initializeComponents() {
-        adminCRUDFrame = createLabel("", MENU_ADMIN_IMAGE_PATH, 180, 180);
-        hoverAdmin = createLabel("", "/image/hoveradmin.png", 0, 300);
-        obat = createLabel("", "/image/addobat.png", 465, 180);
-        hoverObat = createLabel("", "/image/hoverobat.png", 0, 300);
-       kasir = createLabel("", "/image/kasir.png", 750, 180);
-        hoverKasir = createLabel("", "/image/hoverkasir.png", 0, 300);
-       logoutLabel = createLabel("", "/image/logout.png", 30, 530);
-
-       getContentPane().add(adminCRUDFrame);
-       getContentPane().add(hoverAdmin);
-       getContentPane().add(obat);
-       getContentPane().add(hoverObat);
-       getContentPane().add(kasir);
-       getContentPane().add(hoverKasir);
-      getContentPane().add(logoutLabel);
-
-        menuLabel = new JLabel("");
-        menuLabel.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/image/titlemenu.png"))));
-        menuLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        menuLabel.setForeground(Color.WHITE);
-        menuLabel.setFont(new Font("Nirmala UI", Font.BOLD, 40));
-        menuLabel.setBounds(0, 21, 1084, 139);
-
-        getContentPane().add(menuLabel);
-
-        JLabel adminLabel = createLabel("Admin", MENU_ADMIN_IMAGE_PATH, 180, 520);
-        adminLabel.setBounds(180, 520, 100, 30);
-
-        JLabel obatLabel = createLabel("Obat", "/image/addobat.png", 465, 520);
-        obatLabel.setBounds(465, 520, 100, 30);
-
-        JLabel kasirLabel = createLabel("Kasir", "/image/kasir.png", 750, 520);
-        kasirLabel.setBounds(750, 520, 100, 30);
-
-
-        getContentPane().add(adminLabel);
-        getContentPane().add(obatLabel);
-        getContentPane().add(kasirLabel);
-
         frame.getContentPane();
     }
 
@@ -173,72 +124,6 @@ public class Home extends JFrame {
         public void actionPerformed(ActionEvent e) {
             logout();
         }
-    }
-
-    private JLabel createLabel(String labelText, String imagePath, int x, int y) {
-        JLabel label = new JLabel(labelText, new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePath))), SwingConstants.CENTER);
-        label.setBounds(x, y, 170, 170);
-        label.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        label.setVerticalTextPosition(SwingConstants.BOTTOM);
-        label.setHorizontalTextPosition(SwingConstants.CENTER);
-        label.setForeground(Color.WHITE);
-
-        return label;
-    }
-
-    private void addActionListeners() {
-        logoutLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                logout();
-            }
-        });
-
-        adminCRUDFrame.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                handleMouseEnter(adminCRUDFrame, MENU_ADMIN_IMAGE_PATH, hoverAdmin, true);
-            }
-
-            public void mouseExited(MouseEvent e) {
-                handleMouseEnter(adminCRUDFrame, MENU_ADMIN_IMAGE_PATH, hoverAdmin, false);
-            }
-
-            public void mouseClicked(MouseEvent e) {
-                openAdminCRUDFrame();
-            }
-        });
-
-        obat.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                handleMouseEnter(obat, "/image/addobat.png", hoverObat, true);
-            }
-
-            public void mouseExited(MouseEvent e) {
-                handleMouseEnter(obat, "/image/addobat.png", hoverObat, false);
-            }
-
-            public void mouseClicked(MouseEvent e) {
-                openObatGUI();
-            }
-        });
-
-        kasir.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                handleMouseEnter(kasir, "/image/kasir.png", hoverKasir, true);
-            }
-
-            public void mouseExited(MouseEvent e) {
-                handleMouseEnter(kasir, "/image/kasir.png", hoverKasir, false);
-            }
-
-            public void mouseClicked(MouseEvent e) {
-                openKasirGUI();
-            }
-        });
-    }
-
-    private void handleMouseEnter(JLabel label, String imagePath, JLabel hoverLabel, boolean showHover) {
-        label.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePath))));
-        hoverLabel.setVisible(showHover);
     }
 
     private void openAdminCRUDFrame() {
