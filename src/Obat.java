@@ -423,7 +423,7 @@ public class Obat extends JFrame {
             if (!kodeObat.isEmpty() && !namaObat.isEmpty() && !harga.isEmpty() && !stok.isEmpty() && !keterangan.isEmpty() && !expDate.isEmpty()) {
                 // Lakukan operasi update ke database
                 try (Connection connection = KoneksiDB.getKoneksi()) {
-                    String query = "UPDATE obat SET Nama_Obat=?, Harga=?, Stok=?, Keterangan=?, Exp_Date=? WHERE Kode_Obat=?";
+                    String query = "UPDATE obat SET Nama_Obat=?, Harga_Obat=?, Stok=?, Ket_Obat=?, Exp_Date=? WHERE Kode_Obat=?";
                     try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                         preparedStatement.setString(1, namaObat);
                         preparedStatement.setString(2, harga);
