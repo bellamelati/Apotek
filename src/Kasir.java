@@ -3,6 +3,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.*;
@@ -68,6 +70,7 @@ public class Kasir extends JFrame {
         backButton.setContentAreaFilled(false);
         backButton.setPreferredSize(new Dimension(backImages.getIconWidth(), backImages.getIconHeight()));
 
+
         // Letakkan tombol kembali di sebelah kiri
         titlePanel.add(backButton, BorderLayout.WEST);
 
@@ -104,6 +107,14 @@ public class Kasir extends JFrame {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 10, 10));
         searchPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0)); // Atur margin
         searchPanel.setBackground(backgroundColor);
+
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Panggil method untuk menutup frame
+                closeFrame();
+            }
+        });
 
         // Add search label and field
         kodeObatLabel = new JLabel("Kode Obat");
@@ -169,6 +180,11 @@ public class Kasir extends JFrame {
         firstPanel.add(inputPanel, BorderLayout.CENTER);
         frame.getContentPane().add(firstPanel, BorderLayout.CENTER);
         frame.getContentPane().add(secondPanel, BorderLayout.SOUTH);
+    }
+    private void closeFrame() {
+        frame.dispose(); // Tutup frame Obat
+        Home home = new Home();
+        home.showGUI(); // Tampilkan frame Home
     }
 
     public static void main(String[] args) {

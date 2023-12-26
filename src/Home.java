@@ -140,7 +140,8 @@ public class Home extends JFrame {
     }
 
     private void openKasirGUI() {
-//        new Kasir();
+        frame.setVisible(false);
+        new Kasir();
     }
 
     private void logout() {
