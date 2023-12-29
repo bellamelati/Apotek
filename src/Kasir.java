@@ -10,8 +10,11 @@ import java.util.Objects;
 
 public class Kasir extends JFrame {
     private JFrame frame;
+    private JButton searchButton;
     private JLabel kodeObatLabel;
     private JTextField kodeObatField;
+    private JLabel cariLabel;
+    private JTextField cariField;
     private JLabel merkLabel;
     private JTextField merkField;
     private JLabel hargaLabel;
@@ -91,39 +94,37 @@ public class Kasir extends JFrame {
     }
 
     private void initializeComponents() {
-        JPanel firstPanel = new JPanel(new BorderLayout());
-        firstPanel.setBackground(Color.green);
-        firstPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0)); // Atur margin
-
-        JPanel secondPanel = new JPanel(new GridLayout(1, 1, 0, 0));
-        secondPanel.setBackground(Color.red);
-        secondPanel.setBorder(BorderFactory.createEmptyBorder(1, 0, 5, 0)); // Atur margin
-
         Font labelFont = new Font("Rockwell", Font.BOLD, 18);
 
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 10, 10));
-        searchPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0)); // Atur margin
+        JPanel firstPanel = new JPanel(new GridLayout(2, 1, 0, 0));
+        firstPanel.setBackground(backgroundColor);
+        firstPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 20, 0)); // Atur margin
+        firstPanel.setLayout(new BoxLayout(firstPanel, BoxLayout.Y_AXIS));
+
+        JPanel secondPanel = new JPanel(new GridLayout(2, 1, 0, 0));
+        secondPanel.setBackground(backgroundColor);
+        secondPanel.setBorder(BorderFactory.createEmptyBorder(1, 0, 3, 0)); // Atur margin
+        secondPanel.setLayout(new BoxLayout(secondPanel, BoxLayout.PAGE_AXIS));
+
+        JPanel searchPanel = new JPanel(new GridLayout(1, 1, 0, 0));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0)); // Atur margin bawah
         searchPanel.setBackground(backgroundColor);
 
-        // Add search label and field
+        ImageIcon searchButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/kcari.png")));
+        searchButton = new JButton(searchButtonImage);
+        searchButton.setBorderPainted(false);
+        searchButton.setContentAreaFilled(false);
+        searchButton.setPreferredSize(new Dimension(searchButtonImage.getIconWidth(), searchButtonImage.getIconHeight()));
+
         kodeObatLabel = new JLabel("Kode Obat");
         kodeObatLabel.setForeground(Color.WHITE);
         kodeObatLabel.setFont(labelFont);
 
-        kodeObatField = new JTextField(5);
+        kodeObatField = new JTextField(10);
 
-        ImageIcon searchButtonImage = new ImageIcon(getClass().getResource("/images/kcari.png"));
-        JButton searchButton = new JButton(searchButtonImage);
-        searchButton.setBorderPainted(false);
-        searchButton.setContentAreaFilled(false);
-
-        searchPanel.add(kodeObatLabel);
-        searchPanel.add(kodeObatField);
-        searchPanel.add(searchButton);
-
-        JPanel inputPanel = new JPanel(new GridLayout(4, 2, 0, 0)); // Mengubah ke 3 kolom agar lebih mudah dilihat
-        inputPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0)); // Atur margin
-        inputPanel.setBackground(Color.blue);
+        JPanel inputPanel = new JPanel(new GridLayout(2, 6, 10, 10));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 15, 0)); // Atur margin
+        inputPanel.setBackground(backgroundColor);
 
         merkLabel = new JLabel("Merk");
         merkLabel.setForeground(Color.WHITE);
@@ -137,39 +138,143 @@ public class Kasir extends JFrame {
 
         hargaField = new JTextField(10);
 
-        jumlahitemLabel = new JLabel("jumlah item");
+        jumlahitemLabel = new JLabel("Jumlah item");
         jumlahitemLabel.setForeground(Color.WHITE);
         jumlahitemLabel.setFont(labelFont);
 
         jumlahitemField = new JTextField(10);
 
-        jumlahLabel = new JLabel("jumlah");
+        jumlahLabel = new JLabel("Jumlah");
         jumlahLabel.setForeground(Color.WHITE);
         jumlahLabel.setFont(labelFont);
 
         jumlahField = new JTextField(10);
 
+        ImageIcon batalButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/kbatal.png")));
+        JButton batalButton = new JButton(batalButtonImage);
+        batalButton.setBorderPainted(false);
+        batalButton.setContentAreaFilled(false);
+        batalButton.setPreferredSize(new Dimension(batalButtonImage.getIconWidth(), batalButtonImage.getIconHeight()));
+
+        ImageIcon prosesButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/proses.png")));
+        JButton prosesButton = new JButton(prosesButtonImage);
+        prosesButton.setBorderPainted(false);
+        prosesButton.setContentAreaFilled(false);
+        prosesButton.setPreferredSize(new Dimension(prosesButtonImage.getIconWidth(), prosesButtonImage.getIconHeight()));
+
+        searchPanel.add(kodeObatLabel);
+        searchPanel.add(kodeObatField);
+        searchPanel.add(searchButton);
+
         inputPanel.add(merkLabel);
         inputPanel.add(merkField);
-        inputPanel.add(hargaLabel);
-        inputPanel.add(hargaField);
         inputPanel.add(jumlahitemLabel);
         inputPanel.add(jumlahitemField);
+        inputPanel.add(prosesButton);
+        inputPanel.add(hargaLabel);
+        inputPanel.add(hargaField);
         inputPanel.add(jumlahLabel);
         inputPanel.add(jumlahField);
+        inputPanel.add(batalButton);
 
-        //inputPanel.add(totalLabel);
-//        inputPanel.add(totalField);
-//        inputPanel.add(tunaiLabel);
-//        inputPanel.add(tunaiField);
-//        inputPanel.add(kembalianLabel);
-//        inputPanel.add(kembalianField);
+        JPanel twoPanel = new JPanel(new GridLayout(1, 7, 0, 0));
+        twoPanel.setBackground(backgroundColor);
+        twoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0)); // Atur margin
 
-        firstPanel.add(searchPanel, BorderLayout.NORTH);
-        firstPanel.add(inputPanel, BorderLayout.CENTER);
+        // Add the table scroll pane to the table panel
+        JPanel tablePanel = new JPanel(new GridLayout(6, 0, 0, 0));
+        tablePanel.setBackground(backgroundColor);
+        tablePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0)); // Atur margin
+        tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
+
+        // Create a table model with columns
+        String[] columns = {"Kode Obat", "Nama Obat", "Harga", "Stok", "Keterangan", "Exp_Date"};
+        tableModel = new DefaultTableModel(columns, 0);
+        kasirTable = new JTable(tableModel);
+
+        // Set up sorting for the table
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        kasirTable.setRowSorter(sorter);
+
+        JScrollPane tableScrollPane = new JScrollPane(kasirTable);
+        tableScrollPane.add(Box.createVerticalStrut(100));
+        tableScrollPane.setBackground(backgroundColor);
+        tableScrollPane.setBorder(new EmptyBorder(5, 20, 5, 20));
+        tablePanel.add(tableScrollPane);
+
+        JPanel tempPanel = new JPanel(new GridLayout(1, 1, 0, 0));
+        tempPanel.setBackground(backgroundColor);
+        tempPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0)); // Atur margin
+
+        // Mengatur ukuran tombol oke
+        ImageIcon okeButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/oke.png")))
+                .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
+        JButton okeButton = new JButton(okeButtonImage);
+        okeButton.setBorderPainted(false);
+        okeButton.setContentAreaFilled(false);
+        okeButton.setPreferredSize(new Dimension(130, 50));
+
+        // Mengatur ukuran tombol hitung
+        ImageIcon hitungButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/hitung.png")))
+                .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
+        JButton hitungButton = new JButton(hitungButtonImage);
+        hitungButton.setBorderPainted(false);
+        hitungButton.setContentAreaFilled(false);
+        hitungButton.setPreferredSize(new Dimension(130, 50));
+
+        // Mengatur ukuran tombol hapus
+        ImageIcon deleteButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/hapusBtn.png")))
+                .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
+        JButton deleteButton = new JButton(deleteButtonImage);
+        deleteButton.setBorderPainted(false);
+        deleteButton.setContentAreaFilled(false);
+        deleteButton.setPreferredSize(new Dimension(130, 50));
+
+        // Mengatur ukuran tombol bersih
+        ImageIcon clearButtonImage = new ImageIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/bersihBtn.png")))
+                .getImage().getScaledInstance(130, 30, Image.SCALE_DEFAULT));
+        JButton clearAllButton = new JButton(clearButtonImage);
+        clearAllButton.setBorderPainted(false);
+        clearAllButton.setContentAreaFilled(false);
+        clearAllButton.setPreferredSize(new Dimension(130, 50));
+
+        JPanel crudPanel = new JPanel(new FlowLayout());
+        crudPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0)); // Atur margin
+        crudPanel.setBackground(backgroundColor);
+
+        crudPanel.add(okeButton);
+        crudPanel.add(hitungButton);
+        crudPanel.add(deleteButton);
+        crudPanel.add(clearAllButton);
+
+//        totalLabel = new JLabel("total");
+//        totalLabel.setForeground(Color.WHITE);
+//        totalLabel.setFont(labelFont);
+//
+//        totalField = new JTextField(10);
+//
+//        kembalianLabel = new JLabel("kembalian");
+//        kembalianLabel.setForeground(Color.WHITE);
+//        kembalianLabel.setFont(labelFont);
+//
+//        kembalianField = new JTextField(10);
+//
+//        JPanel totalPanel = new JPanel(new GridLayout(3, 2, 0, 0));
+//        totalPanel.setBackground(backgroundColor);
+//        totalPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0)); // Atur margi
+//
+        twoPanel.add(searchPanel);
+        firstPanel.add(twoPanel);
+        firstPanel.add(inputPanel);
+
+        tempPanel.add(tablePanel);
+        secondPanel.add(tempPanel);
+        secondPanel.add(crudPanel);
+
         frame.getContentPane().add(firstPanel, BorderLayout.CENTER);
         frame.getContentPane().add(secondPanel, BorderLayout.SOUTH);
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Kasir());
