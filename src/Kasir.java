@@ -229,7 +229,7 @@ public class Kasir extends JFrame {
         batalButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                hapusObatDariTabel();
+                bersihkanForm();
             }
         });
 
@@ -244,7 +244,7 @@ public class Kasir extends JFrame {
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
 
         // Create a table model with columns
-        String[] columns = {"Kode Obat", "Nama Obat", "Harga", "Jumlah Item", "Jumlah"};
+        String[] columns = {"Kode Obat", "Merk", "Harga", "Jumlah Item", "Jumlah"};
         tableModel = new DefaultTableModel(columns, 0);
         kasirTable = new JTable(tableModel);
 
@@ -290,11 +290,13 @@ public class Kasir extends JFrame {
         clearAllButton.setContentAreaFilled(false);
         clearAllButton.setPreferredSize(new Dimension(130, 50));
 
+        kasirTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         // Tombol untuk menghitung total harga dari seluruh obat yang dibeli
         hitungButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                hitungTotalHarga();
+                hitungKembalian();
             }
         });
 
@@ -309,7 +311,7 @@ public class Kasir extends JFrame {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                hapusDariDatabase();
+                hapusObatDariDatabase();
             }
         });
 
@@ -391,15 +393,13 @@ public class Kasir extends JFrame {
         }
     }
 
-
-
     // Metode untuk memproses penambahan obat ke dalam tabel pembelian
     private void tambahObatKeTabel() {
         String kodeObat = kodeObatField.getText();
         String merk = merkField.getText();
         double harga = Double.parseDouble(hargaField.getText());
         int jumlahItem = Integer.parseInt(jumlahitemField.getText());
-        int jumlah = Integer.parseInt(jumlahField.getText());
+        double jumlah = Double.parseDouble(jumlahField.getText());
 
         // Validasi input (misalnya, pastikan jumlah obat yang dimasukkan lebih dari 0)
         if (jumlah <= 0) {
@@ -413,7 +413,7 @@ public class Kasir extends JFrame {
             tableModel.addRow(rowData);
 
             // Hitung dan tambahkan total harga dari obat yang baru ditambahkan
-            totalHarga += harga * jumlah;
+            totalHarga += harga * jumlahItem; // Fix the calculation
             totalField.setText(String.valueOf(totalHarga));
 
             // Setelah ditambahkan ke tabel, bersihkan field-field input
@@ -424,31 +424,37 @@ public class Kasir extends JFrame {
         }
     }
 
-    // Metode untuk menghapus data obat pada tabel pembelian
-    private void hapusObatDariTabel() {
+    private void hapusObatDariDatabase() {
+        // Mendapatkan baris yang dipilih di tabel
         int selectedRow = kasirTable.getSelectedRow();
-        if (selectedRow != -1) {
-            String kodeObat = tableModel.getValueAt(selectedRow, 0).toString();
-            double harga = Double.parseDouble(tableModel.getValueAt(selectedRow, 2).toString());
-            int jumlah = Integer.parseInt(tableModel.getValueAt(selectedRow, 4).toString());
 
-            try {
-                // Update stok obat di database (misalnya, tambahkan stok sejumlah obat yang dihapus)
-                String updateQuery = "UPDATE obat SET stok = stok + ? WHERE Kode_Obat = ?";
-                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
-                updateStatement.setInt(1, jumlah);
-                updateStatement.setString(2, kodeObat);
-                updateStatement.executeUpdate();
-
-                // Hapus baris yang dipilih dari tabel pembelian
-                totalHarga -= harga * jumlah;
-                totalField.setText(String.valueOf(totalHarga));
-                tableModel.removeRow(selectedRow);
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        // Pastikan ada baris yang dipilih
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih baris yang ingin dihapus.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+
+        // Mendapatkan kode obat dari baris yang dipilih
+        String kodeObat = tableModel.getValueAt(selectedRow, 0).toString();
+
+        // Hapus data obat dari tabel di database
+        try (Connection connection = KoneksiDB.getKoneksi()) {
+            String query = "DELETE FROM kasir WHERE Kode_Obat = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, kodeObat);
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error deleting data from the database.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Hapus baris yang dipilih dari model tabel di GUI
+        tableModel.removeRow(selectedRow);
+
+        // Hitung ulang total harga setelah menghapus obat
+        hitungTotalHarga();
     }
 
     // Metode untuk menghitung total harga dari seluruh obat yang dibeli
@@ -481,12 +487,18 @@ public class Kasir extends JFrame {
                     // Menyiapkan konten yang akan dicetak (misalnya, isi struk)
                     StringBuilder content = new StringBuilder();
                     content.append("========= Struk Pembelian =========\n");
-                    content.append("Kode Obat   : " + kodeObatField.getText() + "\n");
-                    content.append("Merk        : " + merkField.getText() + "\n");
-                    content.append("Harga       : " + hargaField.getText() + "\n");
-                    content.append("Jumlah Item : " + jumlahitemField.getText() + "\n");
-                    content.append("Jumlah      : " + jumlahField.getText() + "\n");
-                    content.append("Total Harga : " + totalField.getText() + "\n");
+
+                    // Iterate through the table and append each row to the content
+                    for (int i = 0; i < tableModel.getRowCount(); i++) {
+                        content.append("Kode Obat   : ").append(tableModel.getValueAt(i, 0)).append("\n");
+                        content.append("Merk        : ").append(tableModel.getValueAt(i, 1)).append("\n");
+                        content.append("Harga       : ").append(tableModel.getValueAt(i, 2)).append("\n");
+                        content.append("Jumlah Item : ").append(tableModel.getValueAt(i, 3)).append("\n");
+                        content.append("Jumlah      : ").append(tableModel.getValueAt(i, 4)).append("\n");
+                        content.append("------------------------------\n");
+                    }
+
+                    content.append("Total Harga : ").append(totalField.getText()).append("\n");
                     // Tambahkan data lainnya yang ingin Anda cetak
 
                     // Menentukan font dan ukuran font untuk mencetak
@@ -514,6 +526,7 @@ public class Kasir extends JFrame {
         }
     }
 
+
     // Metode untuk membersihkan semua input
     private void bersihkanForm() {
         kodeObatField.setText("");
@@ -523,40 +536,10 @@ public class Kasir extends JFrame {
         jumlahField.setText("");
     }
 
-    private void hapusDariDatabase() {
-        // Implementasi untuk hapus obat dari database
-        int row = kasirTable.getSelectedRow();
-        if (row != -1) {
-            // Ambil nilai dari field
-            String kodeObat = (String) kasirTable.getValueAt(row, 0);
-
-            // Lakukan operasi hapus ke database
-            try (Connection connection = KoneksiDB.getKoneksi()) {
-                String query = "DELETE FROM obat WHERE Kode_Obat=?";
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    preparedStatement.setString(1, kodeObat);
-
-                    int affectedRows = preparedStatement.executeUpdate();
-                    if (affectedRows > 0) {
-                        // Jika hapus berhasil, hapus juga dari tabel di GUI
-                        tableModel.removeRow(row);
-                        bersihkanForm();
-                        JOptionPane.showMessageDialog(Kasir.this, "Data Berhasil Dihapus!", "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error deleting obat from the database.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Select a row to delete.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
     private void clearAll() {
         // Hapus semua data dari tabel di database
         try (Connection connection = KoneksiDB.getKoneksi()) {
-            String query = "DELETE FROM obat";
+            String query = "DELETE FROM kasir";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.executeUpdate();
             }
@@ -589,6 +572,26 @@ public class Kasir extends JFrame {
         }
     }
 
+    private void hitungKembalian() {
+        try {
+            double total = Double.parseDouble(totalField.getText());
+            double tunai = Double.parseDouble(tunaiField.getText());
+
+            // Calculate Kembalian
+            double kembalian = tunai - total;
+
+            // Display the calculated Kembalian
+            kembalianField.setText(String.valueOf(kembalian));
+
+            // If Kembalian is negative, display an error message
+            if (kembalian < 0) {
+                JOptionPane.showMessageDialog(this, "Tunai tidak mencukupi untuk pembelian ini.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (NumberFormatException ex) {
+            // Handle the exception if the input is not a valid number
+            JOptionPane.showMessageDialog(this, "Invalid input. Please enter valid numbers.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Kasir());
