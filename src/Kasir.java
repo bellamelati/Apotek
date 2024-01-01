@@ -16,6 +16,7 @@ import java.util.Objects;
 
 public class Kasir extends JFrame {
     private JFrame frame;
+    private JTable kasirTable;
     private JButton searchButton;
     private JButton prosesButton;
     private JButton batalButton;
@@ -42,7 +43,6 @@ public class Kasir extends JFrame {
     private JTextField kembalianField;
     private JLabel kembalianLabel;
     private DefaultTableModel tableModel;
-    private JTable kasirTable;
     private JButton backButton;
     private JScrollPane tableScrollPane;
     private Color backgroundColor;
@@ -55,7 +55,6 @@ public class Kasir extends JFrame {
         configureFrame();
         initializeComponents();
         initializeDatabaseConnection();
-        Action();
     }
 
     private void initializeDatabaseConnection() {
@@ -179,13 +178,13 @@ public class Kasir extends JFrame {
         jumlahField = new JTextField(10);
 
         ImageIcon batalButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/kbatal.png")));
-        JButton batalButton = new JButton(batalButtonImage);
+        batalButton = new JButton(batalButtonImage);
         batalButton.setBorderPainted(false);
         batalButton.setContentAreaFilled(false);
         batalButton.setPreferredSize(new Dimension(batalButtonImage.getIconWidth(), batalButtonImage.getIconHeight()));
 
         ImageIcon prosesButtonImage = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/proses.png")));
-        JButton prosesButton = new JButton(prosesButtonImage);
+        prosesButton = new JButton(prosesButtonImage);
         prosesButton.setBorderPainted(false);
         prosesButton.setContentAreaFilled(false);
         prosesButton.setPreferredSize(new Dimension(prosesButtonImage.getIconWidth(), prosesButtonImage.getIconHeight()));
@@ -205,6 +204,35 @@ public class Kasir extends JFrame {
         inputPanel.add(jumlahField);
         inputPanel.add(batalButton);
 
+        jumlahitemField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hitungJumlah();
+            }
+        });
+
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cariObatByKode();
+            }
+        });
+
+        prosesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tambahObatKeTabel();
+            }
+        });
+
+        // Tombol untuk menghapus data obat pada tabel pembelian
+        batalButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hapusObatDariTabel();
+            }
+        });
+
         JPanel twoPanel = new JPanel(new GridLayout(1, 7, 0, 0));
         twoPanel.setBackground(backgroundColor);
         twoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0)); // Atur margin
@@ -216,7 +244,7 @@ public class Kasir extends JFrame {
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
 
         // Create a table model with columns
-        String[] columns = {"Kode Obat", "Nama Obat", "Harga", "Stok", "Keterangan", "Exp_Date"};
+        String[] columns = {"Kode Obat", "Nama Obat", "Harga", "Jumlah Item", "Jumlah"};
         tableModel = new DefaultTableModel(columns, 0);
         kasirTable = new JTable(tableModel);
 
@@ -262,6 +290,37 @@ public class Kasir extends JFrame {
         clearAllButton.setContentAreaFilled(false);
         clearAllButton.setPreferredSize(new Dimension(130, 50));
 
+        // Tombol untuk menghitung total harga dari seluruh obat yang dibeli
+        hitungButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hitungTotalHarga();
+            }
+        });
+
+        // Tombol untuk mencetak struk pembelian
+        okeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cetakStruk();
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hapusDariDatabase();
+            }
+        });
+
+        clearAllButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clearAll();
+            }
+        });
+
+
         JPanel crudPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5)); // Memberikan jarak horizontal 20 dan vertikal 5
         crudPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0)); // Atur margin
         crudPanel.setBackground(backgroundColor);
@@ -306,70 +365,32 @@ public class Kasir extends JFrame {
         frame.getContentPane().add(secondPanel, BorderLayout.SOUTH);
     }
 
-    private void Action(){
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cariObatByKode();
-            }
-        });
-
-        // Tombol untuk memproses penambahan obat ke dalam tabel pembelian
-        prosesButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                tambahObatKeTabel();
-            }
-        });
-
-        // Tombol untuk menghapus data obat pada tabel pembelian
-        batalButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                hapusObatDariTabel();
-            }
-        });
-
-        // Tombol untuk menghitung total harga dari seluruh obat yang dibeli
-        hitungButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                hitungTotalHarga();
-            }
-        });
-
-        // Tombol untuk mencetak struk pembelian
-        okeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cetakStruk();
-            }
-        });
-    }
-
     private void cariObatByKode() {
         String kodeObat = kodeObatField.getText();
 
         try {
-            String query = "SELECT merk, harga FROM obat WHERE kode_obat = ?";
+            String query = "SELECT Nama_Obat, Harga_Obat FROM obat WHERE LOWER(Kode_Obat) = LOWER(?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, kodeObat);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 // Populate the corresponding fields with the retrieved data
-                merkField.setText(resultSet.getString("merk"));
-                hargaField.setText(String.valueOf(resultSet.getDouble("harga")));
+                merkField.setText(resultSet.getString("Nama_Obat"));
+                hargaField.setText(String.valueOf(resultSet.getDouble("Harga_Obat")));
                 // You can add more fields if needed
 
             } else {
                 JOptionPane.showMessageDialog(this, "Obat tidak ditemukan", "Error", JOptionPane.ERROR_MESSAGE);
+                // If obat is not found, clear the fields
+                bersihkanForm();
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
 
     // Metode untuk memproses penambahan obat ke dalam tabel pembelian
@@ -387,13 +408,6 @@ public class Kasir extends JFrame {
         }
 
         try {
-            // Update stok obat di database (misalnya, kurangi stok sejumlah obat yang dibeli)
-            String updateQuery = "UPDATE obat SET stok = stok - ? WHERE kode_obat = ?";
-            PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
-            updateStatement.setInt(1, jumlah);
-            updateStatement.setString(2, kodeObat);
-            updateStatement.executeUpdate();
-
             // Tambahkan data obat ke dalam tabel pembelian
             String[] rowData = {kodeObat, merk, String.valueOf(harga), String.valueOf(jumlahItem), String.valueOf(jumlah)};
             tableModel.addRow(rowData);
@@ -403,9 +417,9 @@ public class Kasir extends JFrame {
             totalField.setText(String.valueOf(totalHarga));
 
             // Setelah ditambahkan ke tabel, bersihkan field-field input
-            bersihkanInput();
+            bersihkanForm();
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -420,7 +434,7 @@ public class Kasir extends JFrame {
 
             try {
                 // Update stok obat di database (misalnya, tambahkan stok sejumlah obat yang dihapus)
-                String updateQuery = "UPDATE obat SET stok = stok + ? WHERE kode_obat = ?";
+                String updateQuery = "UPDATE obat SET stok = stok + ? WHERE Kode_Obat = ?";
                 PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
                 updateStatement.setInt(1, jumlah);
                 updateStatement.setString(2, kodeObat);
@@ -501,12 +515,78 @@ public class Kasir extends JFrame {
     }
 
     // Metode untuk membersihkan semua input
-    private void bersihkanInput() {
+    private void bersihkanForm() {
         kodeObatField.setText("");
         merkField.setText("");
         hargaField.setText("");
         jumlahitemField.setText("");
         jumlahField.setText("");
+    }
+
+    private void hapusDariDatabase() {
+        // Implementasi untuk hapus obat dari database
+        int row = kasirTable.getSelectedRow();
+        if (row != -1) {
+            // Ambil nilai dari field
+            String kodeObat = (String) kasirTable.getValueAt(row, 0);
+
+            // Lakukan operasi hapus ke database
+            try (Connection connection = KoneksiDB.getKoneksi()) {
+                String query = "DELETE FROM obat WHERE Kode_Obat=?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setString(1, kodeObat);
+
+                    int affectedRows = preparedStatement.executeUpdate();
+                    if (affectedRows > 0) {
+                        // Jika hapus berhasil, hapus juga dari tabel di GUI
+                        tableModel.removeRow(row);
+                        bersihkanForm();
+                        JOptionPane.showMessageDialog(Kasir.this, "Data Berhasil Dihapus!", "Konfirmasi", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error deleting obat from the database.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Select a row to delete.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void clearAll() {
+        // Hapus semua data dari tabel di database
+        try (Connection connection = KoneksiDB.getKoneksi()) {
+            String query = "DELETE FROM obat";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error deleting all data from the database.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Hapus semua data dari model tabel di GUI
+        tableModel.setRowCount(0);
+
+        // Clear all fields
+        bersihkanForm();
+    }
+
+    private void hitungJumlah() {
+        try {
+            int jumlahItem = Integer.parseInt(jumlahitemField.getText());
+            double harga = Double.parseDouble(hargaField.getText());
+
+            // Calculate the Jumlah based on Jumlah Item and Harga
+            double jumlah = jumlahItem * harga;
+
+            // Set the calculated value to the Jumlah field
+            jumlahField.setText(String.valueOf(jumlah));
+        } catch (NumberFormatException ex) {
+            // Handle the exception if the input is not a valid number
+            JOptionPane.showMessageDialog(this, "Invalid input. Please enter valid numbers.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 
