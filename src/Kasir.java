@@ -7,12 +7,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.sql.*;
 import java.util.Objects;
 
 public class Kasir extends JFrame {
     private JFrame frame;
     private JButton searchButton;
+    private JButton prosesButton;
+    private JButton batalButton;
+    private JButton okeButton;
+    private JButton hitungButton;
+    private JButton hapusButton;
+    private JButton bersihButton;
     private JLabel kodeObatLabel;
     private JTextField kodeObatField;
     private JLabel cariLabel;
@@ -38,12 +48,14 @@ public class Kasir extends JFrame {
     private Color backgroundColor;
     private String hexColor = "#0D3749";
     private Connection connection;
+    private double totalHarga = 0;
 
     public Kasir() {
         initializeFrame();
         configureFrame();
         initializeComponents();
         initializeDatabaseConnection();
+        Action();
     }
 
     private void initializeDatabaseConnection() {
@@ -148,13 +160,13 @@ public class Kasir extends JFrame {
 
         merkField = new JTextField(10);
 
-        hargaLabel = new JLabel("Harga");
+        hargaLabel = new JLabel("Harga Jual");
         hargaLabel.setForeground(Color.WHITE);
         hargaLabel.setFont(labelFont);
 
         hargaField = new JTextField(10);
 
-        jumlahitemLabel = new JLabel("Jumlah item");
+        jumlahitemLabel = new JLabel("Jumlah Item");
         jumlahitemLabel.setForeground(Color.WHITE);
         jumlahitemLabel.setFont(labelFont);
 
@@ -292,6 +304,209 @@ public class Kasir extends JFrame {
 
         frame.getContentPane().add(firstPanel, BorderLayout.CENTER);
         frame.getContentPane().add(secondPanel, BorderLayout.SOUTH);
+    }
+
+    private void Action(){
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cariObatByKode();
+            }
+        });
+
+        // Tombol untuk memproses penambahan obat ke dalam tabel pembelian
+        prosesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tambahObatKeTabel();
+            }
+        });
+
+        // Tombol untuk menghapus data obat pada tabel pembelian
+        batalButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hapusObatDariTabel();
+            }
+        });
+
+        // Tombol untuk menghitung total harga dari seluruh obat yang dibeli
+        hitungButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hitungTotalHarga();
+            }
+        });
+
+        // Tombol untuk mencetak struk pembelian
+        okeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cetakStruk();
+            }
+        });
+    }
+
+    private void cariObatByKode() {
+        String kodeObat = kodeObatField.getText();
+
+        try {
+            String query = "SELECT merk, harga FROM obat WHERE kode_obat = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, kodeObat);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                // Populate the corresponding fields with the retrieved data
+                merkField.setText(resultSet.getString("merk"));
+                hargaField.setText(String.valueOf(resultSet.getDouble("harga")));
+                // You can add more fields if needed
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Obat tidak ditemukan", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // Metode untuk memproses penambahan obat ke dalam tabel pembelian
+    private void tambahObatKeTabel() {
+        String kodeObat = kodeObatField.getText();
+        String merk = merkField.getText();
+        double harga = Double.parseDouble(hargaField.getText());
+        int jumlahItem = Integer.parseInt(jumlahitemField.getText());
+        int jumlah = Integer.parseInt(jumlahField.getText());
+
+        // Validasi input (misalnya, pastikan jumlah obat yang dimasukkan lebih dari 0)
+        if (jumlah <= 0) {
+            JOptionPane.showMessageDialog(this, "Jumlah obat harus lebih dari 0", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            // Update stok obat di database (misalnya, kurangi stok sejumlah obat yang dibeli)
+            String updateQuery = "UPDATE obat SET stok = stok - ? WHERE kode_obat = ?";
+            PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+            updateStatement.setInt(1, jumlah);
+            updateStatement.setString(2, kodeObat);
+            updateStatement.executeUpdate();
+
+            // Tambahkan data obat ke dalam tabel pembelian
+            String[] rowData = {kodeObat, merk, String.valueOf(harga), String.valueOf(jumlahItem), String.valueOf(jumlah)};
+            tableModel.addRow(rowData);
+
+            // Hitung dan tambahkan total harga dari obat yang baru ditambahkan
+            totalHarga += harga * jumlah;
+            totalField.setText(String.valueOf(totalHarga));
+
+            // Setelah ditambahkan ke tabel, bersihkan field-field input
+            bersihkanInput();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Metode untuk menghapus data obat pada tabel pembelian
+    private void hapusObatDariTabel() {
+        int selectedRow = kasirTable.getSelectedRow();
+        if (selectedRow != -1) {
+            String kodeObat = tableModel.getValueAt(selectedRow, 0).toString();
+            double harga = Double.parseDouble(tableModel.getValueAt(selectedRow, 2).toString());
+            int jumlah = Integer.parseInt(tableModel.getValueAt(selectedRow, 4).toString());
+
+            try {
+                // Update stok obat di database (misalnya, tambahkan stok sejumlah obat yang dihapus)
+                String updateQuery = "UPDATE obat SET stok = stok + ? WHERE kode_obat = ?";
+                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                updateStatement.setInt(1, jumlah);
+                updateStatement.setString(2, kodeObat);
+                updateStatement.executeUpdate();
+
+                // Hapus baris yang dipilih dari tabel pembelian
+                totalHarga -= harga * jumlah;
+                totalField.setText(String.valueOf(totalHarga));
+                tableModel.removeRow(selectedRow);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Metode untuk menghitung total harga dari seluruh obat yang dibeli
+    private void hitungTotalHarga() {
+        totalHarga = 0;
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            double harga = Double.parseDouble(tableModel.getValueAt(i, 2).toString());
+            int jumlah = Integer.parseInt(tableModel.getValueAt(i, 4).toString());
+            totalHarga += harga * jumlah;
+        }
+        totalField.setText(String.valueOf(totalHarga));
+    }
+
+    // Metode untuk mencetak struk pembelian
+    private void cetakStruk() {
+        try {
+            // Membuat objek PrinterJob
+            PrinterJob job = PrinterJob.getPrinterJob();
+            job.setPrintable(new Printable() {
+                @Override
+                public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+                    if (pageIndex > 0) {
+                        return Printable.NO_SUCH_PAGE;
+                    }
+
+                    // Mendapatkan graphics dari PrinterJob
+                    Graphics2D g2d = (Graphics2D) graphics;
+                    g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+
+                    // Menyiapkan konten yang akan dicetak (misalnya, isi struk)
+                    StringBuilder content = new StringBuilder();
+                    content.append("========= Struk Pembelian =========\n");
+                    content.append("Kode Obat   : " + kodeObatField.getText() + "\n");
+                    content.append("Merk        : " + merkField.getText() + "\n");
+                    content.append("Harga       : " + hargaField.getText() + "\n");
+                    content.append("Jumlah Item : " + jumlahitemField.getText() + "\n");
+                    content.append("Jumlah      : " + jumlahField.getText() + "\n");
+                    content.append("Total Harga : " + totalField.getText() + "\n");
+                    // Tambahkan data lainnya yang ingin Anda cetak
+
+                    // Menentukan font dan ukuran font untuk mencetak
+                    Font font = new Font("Monospaced", Font.PLAIN, 12);
+                    g2d.setFont(font);
+
+                    // Memecah konten menjadi beberapa baris dan mencetaknya
+                    String[] lines = content.toString().split("\n");
+                    int y = 15; // Koordinat y awal
+                    for (String line : lines) {
+                        g2d.drawString(line, 10, y);
+                        y += 15; // Menyesuaikan jarak antar baris
+                    }
+
+                    return Printable.PAGE_EXISTS;
+                }
+            });
+
+            // Menampilkan dialog pencetakan dan mencetak jika pengguna menyetujui
+            if (job.printDialog()) {
+                job.print();
+            }
+        } catch (PrinterException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Metode untuk membersihkan semua input
+    private void bersihkanInput() {
+        kodeObatField.setText("");
+        merkField.setText("");
+        hargaField.setText("");
+        jumlahitemField.setText("");
+        jumlahField.setText("");
     }
 
 
