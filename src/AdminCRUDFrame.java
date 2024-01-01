@@ -62,8 +62,8 @@ public class AdminCRUDFrame extends JFrame {
         titlePanel.add(backButton);
         titlePanel.add(titleLabel);
 
-        // add(titlePanel);
         firstPanel.add(titlePanel);
+
         // Create input panel with labels
         Font labelFont = new Font("Rockwell", Font.BOLD, 18);
         JPanel inputPanel = new JPanel(new GridLayout(4, 2, 10, 10));
@@ -131,24 +131,19 @@ public class AdminCRUDFrame extends JFrame {
         crudPanel.add(clearAllButton);
 
         twoPanel.add(crudPanel);
-        // inputPanel.add(crudPanel);
+
         JPanel paginationPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         paginationPanel.setBackground(backgroundColor);
 
-
         titlePanel.add(inputPanel);
-        // add(inputPanel);
-        // add(twoPanel);
 
         firstPanel.add(inputPanel);
         firstPanel.add(twoPanel);
-        // add(titlePanel, BorderLayout.PAGE_START);
 
         add(firstPanel, BorderLayout.BEFORE_FIRST_LINE);
 
         // Create search panel
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 3));
         
         searchPanel.setBackground(backgroundColor);
 
@@ -169,8 +164,6 @@ public class AdminCRUDFrame extends JFrame {
         searchPanel.add(searchButton);
 
         twoPanel.add(searchPanel);
-        // inputPanel.add(searchPanel);
-        // add(searchPanel, BorderLayout.CENTER);
 
         // Create a table model with columns
         String[] columns = {"Kode Admin", "Username", "Password"};
@@ -187,14 +180,9 @@ public class AdminCRUDFrame extends JFrame {
 
         JScrollPane tableScrollPane = new JScrollPane(adminTable);
         tableScrollPane.add(Box.createVerticalStrut(600));
-        // tablePanel.add(tableScrollPane);
         tablePanel.add(tableScrollPane);
 
-        // add(tablePanel);
-        // add(paginationPanel);
-
         secondPanel.add(tablePanel);
-        // secondPanel.add(paginationPanel);
         add(secondPanel, BorderLayout.PAGE_END);
         tableScrollPane.setBackground(backgroundColor);
 
@@ -258,12 +246,12 @@ public class AdminCRUDFrame extends JFrame {
 
         if (!code.isEmpty() && !username.isEmpty() && !password.isEmpty()) {
             try (Connection connection = KoneksiDB.getKoneksi()) {
-            String query = "INSERT INTO admin (Id_Admin, Username, Password) VALUES (?, ?, ?)";
+                String query = "INSERT INTO admin (Id_Admin, Username, Password) VALUES (?, ?, ?)";
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                     preparedStatement.setString(1, code);
                     preparedStatement.setString(2, username);
                     preparedStatement.setString(3, password);
-        
+
                     int affectedRows = preparedStatement.executeUpdate();
                     if (affectedRows > 0) {
                         // Jika penambahan berhasil, tambahkan juga ke tabel di GUI
@@ -277,11 +265,11 @@ public class AdminCRUDFrame extends JFrame {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error adding admin to the database.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            
+
         } else {
             JOptionPane.showMessageDialog(this, "All fields must be filled.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }
 
 
@@ -303,7 +291,7 @@ public class AdminCRUDFrame extends JFrame {
                         preparedStatement.setString(1, username);
                         preparedStatement.setString(2, password);
                         preparedStatement.setString(3, code);
-            
+
                         int affectedRows = preparedStatement.executeUpdate();
                         if (affectedRows > 0) {
                             // Jika update berhasil, update juga di tabel di GUI
@@ -323,7 +311,7 @@ public class AdminCRUDFrame extends JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Select a row to update.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }
 
     private void deleteAdminFromDatabase() {
@@ -335,7 +323,7 @@ public class AdminCRUDFrame extends JFrame {
                 String query = "DELETE FROM admin WHERE Id_Admin=?";
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                     preparedStatement.setString(1, code);
-        
+
                     int affectedRows = preparedStatement.executeUpdate();
                     if (affectedRows > 0) {
                         // Jika delete berhasil, hapus juga dari tabel di GUI
@@ -349,11 +337,11 @@ public class AdminCRUDFrame extends JFrame {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error deleting admin from the database.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            
+
         } else {
             JOptionPane.showMessageDialog(this, "Select a row to delete.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }
 
     private void searchAdmin() {
@@ -377,18 +365,25 @@ public class AdminCRUDFrame extends JFrame {
     }
 
     private void clearAll() {
-        // Clear all rows in the table
+        // Hapus semua data dari tabel di database
+        try (Connection connection = KoneksiDB.getKoneksi()) {
+            String query = "DELETE FROM admin";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error deleting all data from the database.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Hapus semua data dari model tabel di GUI
         tableModel.setRowCount(0);
-    
+
         // Clear all fields
         clearFields();
     }
-    
 
-    // private int getEndIndex() {
-    //     int endIndex = getStartIndex() + pageSize - 1;
-    //     return Math.min(endIndex, tableModel.getRowCount() - 1);
-    // }
 
     private void loadDataFromDatabase() {
         tableModel.setRowCount(0); // Clear existing data

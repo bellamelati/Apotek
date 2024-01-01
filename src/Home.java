@@ -24,13 +24,20 @@ public class Home extends JFrame {
         frame = new JFrame("Home - Apotek Kelompok 4");
         backgroundColor = Color.decode("#0D3749");
 
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setBackground(backgroundColor);
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0)); // Atur margin
+
         ImageIcon image = new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/judulmenuadmin.png")));
         JLabel label = new JLabel(image);
 
         Font labelFont = label.getFont();
         label.setFont(new Font(labelFont.getName(), Font.PLAIN, 10));
 
-        frame.getContentPane().add(label, BorderLayout.NORTH);
+        // Letakkan tombol kembali di sebelah kiri
+        titlePanel.add(label, BorderLayout.CENTER);
+
+        frame.getContentPane().add(titlePanel, BorderLayout.NORTH);
         frame.getContentPane().setBackground(backgroundColor);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

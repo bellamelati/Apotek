@@ -130,7 +130,7 @@ public class Obat extends JFrame {
         Font labelFont = new Font("Rockwell", Font.BOLD, 18);
 
         JPanel inputPanel = new JPanel(new GridLayout(3, 7, 10, 10));
-        inputPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 5, 0)); // Atur margin
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(2, 10, 10, 10)); // Atur margin
         inputPanel.setBackground(backgroundColor);
 
         kodeObatLabel = new JLabel("Kode Obat");
@@ -172,12 +172,12 @@ public class Obat extends JFrame {
 
         inputPanel.add(kodeObatLabel);
         inputPanel.add(kodeObatField);
+        inputPanel.add(stokLabel);
+        inputPanel.add(stokField);
         inputPanel.add(namaObatLabel);
         inputPanel.add(namaObatField);
         inputPanel.add(hargaLabel);
         inputPanel.add(hargaField);
-        inputPanel.add(stokLabel);
-        inputPanel.add(stokField);
         inputPanel.add(keteranganLabel);
         inputPanel.add(keteranganField);
         inputPanel.add(expDateLabel);
@@ -305,7 +305,7 @@ public class Obat extends JFrame {
         clearAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bersihkanForm();
+                clearAll();
             }
         });
 
@@ -494,6 +494,27 @@ public class Obat extends JFrame {
         stokField.setText("");
         keteranganField.setText("");
         expDateField.setText("");
+        obatTable.clearSelection();
+    }
+
+    private void clearAll() {
+        // Hapus semua data dari tabel di database
+        try (Connection connection = KoneksiDB.getKoneksi()) {
+            String query = "DELETE FROM obat";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error deleting all data from the database.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Hapus semua data dari model tabel di GUI
+        tableModel.setRowCount(0);
+
+        // Clear all fields
+        bersihkanForm();
     }
 
     private void cariObat() {
